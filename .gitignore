@@ -1,0 +1,19 @@
+# Personal notes and tools
+*.txt
+*.bat
+
+# Compiled
+*.pyc
+__*
+
+# Enviroment
+*.code*
+*.vscode
+build/*
+venv/*
+# *.spec
+
+# Config and log
+*.log
+*.yaml
+*.json
