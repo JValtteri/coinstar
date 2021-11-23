@@ -12,10 +12,11 @@ class Market():
 
     def __init__(self, time_from, time_to, coin='bitcoin', currency='eur'):
 
-        SECONDS_IN_DAY = 86400 # seconds
+        SECONDS_IN_DAY = 86400
+        SECONDS_IN_HOUR = 3600
 
-        self.time_from = time_from - 3600
-        self.time_to = time_to + 3600
+        self.time_from = time_from
+        self.time_to = time_to + SECONDS_IN_DAY + SECONDS_IN_HOUR
         self.coin = coin
         self.currency = currency
 
@@ -51,6 +52,7 @@ class Market():
 
     def create_days(self):
         market_days=[]
+        for datapoint in datapoints:
 
         market_days.append( Market_day(start, end, volume) )
 
@@ -76,8 +78,8 @@ def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
 
 if __name__ == "__main__":
     bitcoin_market = Market(
-        time_from = time_to_posix(2021, 11, 22, hour=0, min=0, sec=0),
-        time_to = time_to_posix(2021, 11, 23, hour=12, min=0, sec=0),
+        time_from = time_to_posix(2021, 11, 22),
+        time_to = time_to_posix(2021, 11, 23),
         coin="bitcoin",
         currency="eur"
     )
