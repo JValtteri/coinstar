@@ -12,11 +12,11 @@ class Market():
 
     def __init__(self, time_from, time_to, coin='bitcoin', currency='eur'):
 
-        SECONDS_IN_DAY = 86400
-        SECONDS_IN_HOUR = 3600
+        self.SECONDS_IN_DAY = 86400
+        self.SECONDS_IN_HOUR = 3600
 
         self.time_from = time_from
-        self.time_to = time_to + SECONDS_IN_DAY + SECONDS_IN_HOUR
+        self.time_to = time_to + self.SECONDS_IN_DAY + self.SECONDS_IN_HOUR
         self.coin = coin
         self.currency = currency
 
@@ -51,21 +51,34 @@ class Market():
         return r.json()
 
     def create_days(self):
-        market_days=[]
-        for datapoint in datapoints:
+        start_of_day = self.time_from
+        last_value = 0
+        market_days = []
+        day_volume = []
+        for datapoint in self.prices:
+            if datapoint[0] > start_of_day:
+                start_of_day += self.SECONDS_IN_DAY
+                start_value = datapoint[1]
 
-        market_days.append( Market_day(start, end, volume) )
+        try:
+            bearish = market_days[-1].close_value > end_value
+
+        except KeyError:
+            # If day is the first day, previous day is not defined
+            bearish = False
+
+        market_days.append( Market_day(start_value, end_value, volume, bearish) )
 
         return market_days
 
 
 class Market_day():
 
-    def __init__(self, start, end, volume):
+    def __init__(self, start, end, volume, bearish):
 
         self.start_value = start
         self.close_value = end
-        self.is_bearish = start > end
+        self.is_bearish = bearish
         self.trading_volume = volume
 
 
