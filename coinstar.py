@@ -14,6 +14,7 @@ class Market():
 
         self.SECONDS_IN_DAY = 86400
         self.SECONDS_IN_HOUR = 3600
+        self.TIMEOUT = 5
 
         self.time_from = time_from
         self.time_to = time_to + self.SECONDS_IN_DAY + self.SECONDS_IN_HOUR
@@ -65,10 +66,13 @@ class Market():
 
 
     def https_getter(self):
-
         address = f"https://api.coingecko.com/api/v3/coins/{self.coin}/market_chart/range"\
                   f"?vs_currency={self.currency}&from={self.time_from}&to={self.time_to}"
-        r = requests.get(address)
+        try:
+            r = requests.get(address, timeout=self.TIMEOUT)
+        except requests.exceptions.ReadTimeout:
+            print(f"HTTP timeout {self.TIMEOUT} s exceeded")
+            exit()
         return r.json()
 
 
