@@ -3,10 +3,8 @@
 # J.V.Ojala 17.11.2021
 # coinstar
 
-import json
-import time, datetime
+import datetime
 import requests
-import copy
 
 class Market():
 
