@@ -64,6 +64,9 @@ def main(argv):
     except ValueError:
         print("Date format error: numbers only")
         sys.exit(2)
+    except UnboundLocalError:
+        print("Error: Both start and end date must be defined. Use -h for Help")
+        sys.exit(2)
 
     # Process market data
     market = Market(
