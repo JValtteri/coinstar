@@ -3,6 +3,7 @@
 # J.V.Ojala 17.11.2021
 # coinstar
 
+import json
 import datetime
 from market import Market
 
@@ -13,6 +14,10 @@ def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
     timestamp = round( time_object.timestamp() )
     return timestamp
 
+def print_datapoints(datapoints, title="datapoints"):
+    """function to print the raw datapoints json"""
+    print(title)
+    print(json.dumps(datapoints, indent=4, sort_keys=True))
 
 if __name__ == "__main__":
     market = Market(
@@ -26,10 +31,5 @@ if __name__ == "__main__":
     print(f"Max Bearish: {market.longest_bearish}")
 
 
-
-    # print(f"Prices:")
-    # print(json.dumps(bitcoin_market.prices, indent=4, sort_keys=True))
-
-    # print(f"volumes:")
-    # print(json.dumps(bitcoin_market.volumes, indent=4, sort_keys=True))
-
+    print_datapoints(market.prices, "Prices")
+    print_datapoints(market.volumes, "Volumes")
