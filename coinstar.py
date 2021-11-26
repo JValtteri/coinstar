@@ -7,6 +7,7 @@ import json
 import datetime
 import sys, getopt
 from market import Market
+# from gui import *
 
 
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
@@ -29,8 +30,8 @@ def print_datapoints(datapoints, title="datapoints"):
 
 def main(argv):
     """Main function"""
-    # Parse arguments
 
+    short_help = 'coinstar.py -s <start date> -e <end date> -r --help'
     helptext = 'coinstar.py <opts>\n\n' \
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
@@ -38,10 +39,16 @@ def main(argv):
                '-h    --help                Show this help\n'
     print_raw = False
 
+    if argv == []:
+        # Start GUI
+        # ui.start()
+        sys.exit()
+
+    # Parse arguments
     try:
         opts, args = getopt.getopt(argv,"hrs:e:",["start=","end=","help"])
     except getopt.GetoptError:
-        print ('coinstar.py -s <start date> -e <end date> -r --help')
+        print(short_help)
         sys.exit(2)
     for opt, arg in opts:
         if opt in ('-h', 'help') or len(argv) is 0:
@@ -55,7 +62,7 @@ def main(argv):
             print_raw = True
 
     if opts == []:
-        print ('coinstar.py -s <start date> -e <end date> -r --help')
+        print(short_help)
         sys.exit(2)
 
     try:
