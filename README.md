@@ -1,6 +1,32 @@
 # coinstar
 A program to analyse bitcoin market value for a given date range
 
+## Setup ##
+
+### Make sure you have [***Python 3.6***](https://www.python.org/downloads/) or newer Installed ###
+
+**Windows**
+```
+python3
+```
+
+**Linux**
+```
+$ apt-get install python3
+```
+
+### Install requirements ###
+
+**Windows**
+```
+install.bat
+```
+
+**Linux**
+```
+$ install.sh
+```
+
 ## Use in CLI ##
 
 ```
