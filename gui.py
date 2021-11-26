@@ -30,10 +30,10 @@ class Gui():
 
         # BUTTONS
 
-        btn_close = Button(root, text="Close", command=close, bg="#C00000", padx=10, pady=10)
+        btn_close = Button(root, text="Close", command=close, bg="#C08080", padx=10, pady=10)
         btn_close.grid(row=90, column=2)
 
-        btn_get = Button(root, text="Get", command=self.get, bg="#00C000", padx=30, pady=15)
+        btn_get = Button(root, text="Get", command=self.get, bg="#80C080", padx=30, pady=15)
         btn_get.grid(row=90, column=1, padx=0, pady=5)
 
         # LABELS
@@ -59,7 +59,7 @@ class Gui():
 
 
     def get(self):
-
+        """Get start market data from 'start' to 'end'"""
         start = self.e_start.get()
         end = self.e_end.get()
 

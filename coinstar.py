@@ -7,7 +7,7 @@ import json
 import datetime
 import sys, getopt
 from market import Market
-# from gui import *
+import gui
 
 
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
@@ -36,17 +36,18 @@ def main(argv):
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
                '-r    --raw                 Show raw data\n' \
-               '-h    --help                Show this help\n'
+               '-h    --help                Show this help\n' \
+               '-g    --gui                 Start GUI\n'
     print_raw = False
 
     if argv == []:
         # Start GUI
-        # ui.start()
+        gui.Gui()
         sys.exit()
 
     # Parse arguments
     try:
-        opts, args = getopt.getopt(argv,"hrs:e:",["start=","end=","help"])
+        opts, args = getopt.getopt(argv,"hrs:e:g",["start=","end=","help","gui"])
     except getopt.GetoptError:
         print(short_help)
         sys.exit(2)
@@ -60,6 +61,9 @@ def main(argv):
             end_str = arg
         elif opt in ("-r", "--raw"):
             print_raw = True
+        elif opt in ("-g", "--gui"):
+            gui.Gui()
+            sys.exit()
 
     if opts == []:
         print(short_help)
