@@ -11,7 +11,13 @@ from market import Market
 
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
     """Takes date and time and returns POSIX timestamp in seconds"""
-    time_object = datetime.datetime(year, mon, day, hour, min, sec)
+    try:
+        time_object = datetime.datetime(year, mon, day, hour, min, sec)
+    except ValueError:
+        print("Date format error: invalid date format\n" \
+              "Date format: YYYY.MM.DD")
+        sys.exit(2)
+
     timestamp = round( time_object.timestamp() )
     return timestamp
 
@@ -52,8 +58,12 @@ def main(argv):
         print ('coinstar.py -s <start date> -e <end date> -r --help')
         sys.exit(2)
 
-    start = [int(i) for i in start_str.split('.')]
-    end = [int(i) for i in end_str.split('.')]
+    try:
+        start = [int(i) for i in start_str.split('.')]
+        end = [int(i) for i in end_str.split('.')]
+    except ValueError:
+        print("Date format error: numbers only")
+        sys.exit(2)
 
     # Process market data
     market = Market(
