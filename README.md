@@ -1,40 +1,52 @@
 # coinstar
-A program to analyse bitcoin market value for a given date range
+A program to analyse bitcoin market value for a given date range.
+
+## Dependencies ##
+- [Python3](https://www.python.org/)
+- [Requests: HTTP for Humans](https://docs.python-requests.org/en/master/)
+- [CoinGecko HTTP API](https://www.coingecko.com/en/api/documentation).
 
 ## Setup ##
 
 ### Make sure you have [***Python 3.6***](https://www.python.org/downloads/) or newer Installed ###
 
-**Windows**
+**Windows:**
 ```
 python3
 ```
 
-**Linux**
+**Linux:**
 ```
 $ apt-get install python3
 ```
 
 ### Install requirements ###
 
-**Windows**
+**Windows:**
 ```
 install.bat
 ```
 
-**Linux**
+**Linux:**
 ```
 $ install.sh
+```
+
+**Manual:**
+```
+pip3 install --upgrade pip
+pip3 install -r requirements.txt
 ```
 
 ## Use in CLI ##
 
 ```
-coinstar.py <opts>
+coinstar.py -s <start date> -e <end date> <options>
 
   -s    --start  <start date> YYYY.MM.DD
   -e    --end    <end date>   YYYY.MM.DD
   -r    --raw                 Show raw data
+  -d    --data-points         Show formatted datapoints
   -h    --help                Show this help
 ```
 
