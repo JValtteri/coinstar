@@ -31,15 +31,16 @@ def print_raw(datapoints, title="datapoints"):
 
 def print_datapoints(prices, volumes):
     """Function to print formatted datapoints"""
-    print(f"\nTime \t\t\t\t Price \t\t\t Volume")
+    print(f"\nTime \t\t\t\t Price \t\t Volume")
     for i in range(len(prices)):
-        timestamp = prices[i][0]                                        # Timestamp
+        timestamp = prices[i][0] / 1000                                 # Timestamp (ms -> s)
         price = round( prices[i][1], 2)                                 # Price
-        volume = int( volumes[i][1])                                    # Volume
+        volume = round( volumes[i][1] )                                 # Volume
 
-        if timestamp != volumes[i][0]:                                  # Check that timestamps match
+        if prices[i][0] != volumes[i][0]:                               # Check that timestamps match
             print("Error! Timestamp mismatch")
-        human_time = datetime.datetime.fromtimestamp(timestamp/1000)    # Convert timestamp to human readable form
+            sys.exit(2)
+        human_time = datetime.datetime.fromtimestamp(timestamp)         # Convert timestamp to human readable form
 
         print(f"{human_time} \t {price} \t {volume}")
 
