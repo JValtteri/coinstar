@@ -56,6 +56,7 @@ class Market():
     def print_days(self):
         for day in self.market_days:
             self.print_day(day)
+        print("\n")
 
 
     def print_day(self, day):

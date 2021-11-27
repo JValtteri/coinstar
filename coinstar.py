@@ -61,6 +61,7 @@ def main(argv):
     if argv == []:
         # Start GUI
         # ui.start()
+        print(short_help)
         sys.exit()
 
     # Parse arguments
@@ -105,11 +106,12 @@ def main(argv):
     )
 
     # Print program outputs
-    print(f"Start date: {start_str}")
-    print(f"End date: {end_str}")
+    print(f"Start date: {start_str}, End date: {end_str}\n")
+    # print(f"End date: {end_str}")
 
     market.print_days()
     print(f"Max Bearish: {market.longest_bearish}")
+    # print(f"Max vomume: {market.max_volume}, {market.max_volume_date}")
 
     if show_raw:
         print_raw(market.prices, "Prices")
