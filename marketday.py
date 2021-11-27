@@ -6,8 +6,9 @@
 
 class Market_day():
 
-    def __init__(self, start, end, volume=None, bearish=False):
+    def __init__(self, date, start, end, volume=None, bearish=False):
 
+        self.date = date
         self.open_value = start
         self.close_value = end
         self.is_bearish = bearish
