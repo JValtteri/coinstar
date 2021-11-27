@@ -106,12 +106,12 @@ def main(argv):
     )
 
     # Print program outputs
-    print(f"Start date: {start_str}, End date: {end_str}\n")
+    print(f"\nStart date: {start_str}, End date: {end_str}\n")
     # print(f"End date: {end_str}")
 
     market.print_days()
     print(f"Max Bearish: {market.longest_bearish}")
-    # print(f"Max vomume: {market.max_volume}, {market.max_volume_date}")
+    print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
 
     if show_raw:
         print_raw(market.prices, "Prices")

@@ -3,6 +3,7 @@
 # J.V.Ojala 26.11.2021
 # market (coinstar)
 
+import datetime
 import requests
 from marketday import Market_day
 
@@ -24,10 +25,16 @@ class Market():
         self.prices = self.transactions['prices']
         self.volumes = self.transactions['total_volumes']
 
+        # Longest bearish is updated during market_days creatiion
         self.longest_bearish = 0
 
+        # Generate a list of market days
         self.market_days = self.create_days()
 
+        # Maximum volume day
+        max_volume, max_volume_date = self.find_max_volume()
+        self.max_volume = max_volume
+        self.max_volume_date = max_volume_date
 
     def update_bearish(self, current_bearish, is_bearish):
         if is_bearish:
@@ -44,7 +51,14 @@ class Market():
         pass
 
     def find_max_volume(self):
-        pass
+        """Finds the biggest volume day and returns: volume, date"""
+        max_volume = 0
+        for day in self.market_days:
+            if day.trading_volume > max_volume:
+                max_volume = day.trading_volume
+                max_volume_day = day.date
+
+        return max_volume, max_volume_day
 
     def best_buy(self):
         pass
@@ -56,12 +70,19 @@ class Market():
     def print_days(self):
         for day in self.market_days:
             self.print_day(day)
-        print("\n")
+        print("")
 
 
     def print_day(self, day):
-        print(f"Open: {day.open_value} {self.currency}, Close: {day.close_value} {self.currency}, " \
-              f"Volume: {day.trading_volume}, Bearish: {day.is_bearish}")
+        """Prints the key figures of a market day"""
+        date = day.date
+        open_value = round(day.open_value, 3)
+        close_value = round(day.close_value, 3)
+        volume = round(day.trading_volume)
+        currency = self.currency
+
+        print(f"Date: {day.date}, Open: {open_value} {currency}, Close: {close_value} {currency}, " \
+              f"Volume: {volume}, Bearish: {day.is_bearish}")
 
 
     def https_getter(self):
@@ -76,8 +97,10 @@ class Market():
 
 
     def create_days(self):
+        """Generates a list of Market_day objects"""
         MS_IN_DAY = self.SECONDS_IN_DAY * 1000
         start_of_day = self.time_from * 1000                        # Convert timestamp to ms
+        day_timestamp = 0
         prices = self.prices
         volumes = self.volumes
 
@@ -88,17 +111,28 @@ class Market():
         market_days = []
         day_volume = 0
         first_day = True                                            # Is this the first day in range?
-        bearish = False
         current_bearish = 0
 
+        # Iterates through datapoints
         for i in range(len(prices)):
 
             if prices[i][TIMESTAMP] > start_of_day:                 # Look for the start of a new day
-                day_close_value = prices[i-1][VALUE]                  # previous datapoint was last days last datapoint.
+                day_close_value = prices[i-1][VALUE]                # previous datapoint was last days last datapoint.
+                date = self.human_readable_date(day_timestamp)         # make human readable
 
                 if not first_day:
                     is_bearish = last_day_close_value > day_close_value
-                    market_days.append( Market_day(day_open_value, day_close_value, day_volume, is_bearish) )
+
+                    # Generates the Market_day object and adds it to the list
+                    market_days.append(
+                        Market_day(
+                            date,
+                            day_open_value,
+                            day_close_value,
+                            day_volume,
+                            is_bearish
+                            )
+                        )
 
                     current_bearish = self.update_bearish(current_bearish, is_bearish)
 
@@ -111,9 +145,19 @@ class Market():
                 day_volume = volumes[i][VALUE]
 
                 first_day = False
+                day_timestamp = start_of_day
                 start_of_day += MS_IN_DAY                           # Next day starts in 24h
 
             else:
                 day_volume += volumes[i][VALUE]                     # Add datapoint volume to the days volume
 
         return market_days
+
+    @staticmethod
+    def human_readable_date(timestamp):
+        """Make a human readable time from timestamp"""
+        timestamp = timestamp / 1000                            # Convert timestamp from ms to s
+        date = datetime.datetime.fromtimestamp(timestamp)       # Make human readable
+        date = str(date).split(" ")[0]                          # Remove the time from the date
+        date = str.replace(date, '-', '.')
+        return date
