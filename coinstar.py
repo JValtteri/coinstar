@@ -22,22 +22,40 @@ def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
     timestamp = round( time_object.timestamp() )
     return timestamp
 
-def print_datapoints(datapoints, title="datapoints"):
+
+def print_raw(datapoints, title="datapoints"):
     """function to print the raw datapoints json"""
     print(title)
     print(json.dumps(datapoints, indent=4, sort_keys=True))
 
 
+def print_datapoints(prices, volumes):
+    """Function to print formatted datapoints"""
+    print(f"\nTime \t\t\t\t Price \t\t\t Volume")
+    for i in range(len(prices)):
+        timestamp = prices[i][0]                                        # Timestamp
+        price = round( prices[i][1], 2)                                 # Price
+        volume = int( volumes[i][1])                                    # Volume
+
+        if timestamp != volumes[i][0]:                                  # Check that timestamps match
+            print("Error! Timestamp mismatch")
+        human_time = datetime.datetime.fromtimestamp(timestamp/1000)    # Convert timestamp to human readable form
+
+        print(f"{human_time} \t {price} \t {volume}")
+
+
 def main(argv):
     """Main function"""
 
-    short_help = 'coinstar.py -s <start date> -e <end date> -r --help'
+    short_help = 'coinstar.py -s <start date> -e <end date> -r -d --help'
     helptext = 'coinstar.py <opts>\n\n' \
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
                '-r    --raw                 Show raw data\n' \
+               '-d    --data-points         Show formatted datapoints\n' \
                '-h    --help                Show this help\n'
-    print_raw = False
+    show_raw = False
+    show_points = False
 
     if argv == []:
         # Start GUI
@@ -46,7 +64,7 @@ def main(argv):
 
     # Parse arguments
     try:
-        opts, args = getopt.getopt(argv,"hrs:e:",["start=","end=","help"])
+        opts, args = getopt.getopt(argv,"hrds:e:",["start=","end=","help","data-points"])
     except getopt.GetoptError:
         print(short_help)
         sys.exit(2)
@@ -58,8 +76,10 @@ def main(argv):
             start_str = arg
         elif opt in ("-e", "--end"):
             end_str = arg
+        elif opt in ("-d", "--data-points"):
+            show_points = True
         elif opt in ("-r", "--raw"):
-            print_raw = True
+            show_raw = True
 
     if opts == []:
         print(short_help)
@@ -89,9 +109,14 @@ def main(argv):
 
     market.print_days()
     print(f"Max Bearish: {market.longest_bearish}")
-    if print_raw:
-        print_datapoints(market.prices, "Prices")
-        print_datapoints(market.volumes, "Volumes")
+
+    if show_raw:
+        print_raw(market.prices, "Prices")
+        print_raw(market.volumes, "Volumes")
+
+    if show_points:
+        print_datapoints(market.prices, market.volumes)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
