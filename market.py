@@ -3,6 +3,7 @@
 # J.V.Ojala 26.11.2021
 # market (coinstar)
 
+import time
 import datetime
 import requests
 from marketday import Market_day
@@ -20,6 +21,10 @@ class Market():
         self.time_to = time_to + self.SECONDS_IN_DAY #+ self.SECONDS_IN_HOUR
         self.coin = coin
         self.currency = currency
+
+        # API Throttiling
+        self.request_count = 0
+        self.throttle_limit = 49
 
         # Generate a list of market days
         self.market_days = self.create_days()
@@ -142,6 +147,10 @@ class Market():
         except requests.exceptions.ReadTimeout:
             print(f"HTTP timeout {self.TIMEOUT} s exceeded")
             exit()
+        self.request_count += 1
+        if self.request_count >= self.throttle_limit:
+            print("Throttling connection")
+            time.sleep(1.21)
         try:
             return r.json()
         except:
