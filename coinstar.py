@@ -71,7 +71,7 @@ def main(argv):
         print(short_help)
         sys.exit(2)
     for opt, arg in opts:
-        if opt in ('-h', 'help') or len(argv) is 0:
+        if opt in ('-h', 'help') or len(argv) == 0:
             print (helptext)
             sys.exit()
         elif opt in ("-s", "--start"):
@@ -111,7 +111,7 @@ def main(argv):
 
     market.print_days()
     print(f"Max Bearish: {market.longest_bearish}")
-    print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
+    # print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
 
     if show_raw:
         print_raw(market.prices, "Prices")

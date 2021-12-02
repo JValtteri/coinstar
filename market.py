@@ -12,18 +12,19 @@ class Market():
     def __init__(self, time_from, time_to, coin='bitcoin', currency='eur'):
 
         self.SECONDS_IN_DAY = 86400
+        self.MS_IN_DAY = self.SECONDS_IN_DAY * 1000
         self.SECONDS_IN_HOUR = 3600
         self.TIMEOUT = 5
 
         self.time_from = time_from
-        self.time_to = time_to + self.SECONDS_IN_DAY + self.SECONDS_IN_HOUR
+        self.time_to = time_to + self.SECONDS_IN_DAY #+ self.SECONDS_IN_HOUR
         self.coin = coin
         self.currency = currency
 
         # Get market data
-        self.transactions = self.https_getter()
-        self.prices = self.transactions['prices']
-        self.volumes = self.transactions['total_volumes']
+        # self.transactions = self.https_getter(self.time_from, self.time_to)
+        # self.prices = self.transactions['prices']
+        # self.volumes = self.transactions['total_volumes']
 
         # Longest bearish is updated during market_days creatiion
         self.longest_bearish = 0
@@ -32,9 +33,9 @@ class Market():
         self.market_days = self.create_days()
 
         # Maximum volume day
-        max_volume, max_volume_date = self.find_max_volume()
-        self.max_volume = max_volume
-        self.max_volume_date = max_volume_date
+        # max_volume, max_volume_date = self.find_max_volume()
+        # self.max_volume = max_volume
+        # self.max_volume_date = max_volume_date
 
     def update_bearish(self, current_bearish, is_bearish):
         if is_bearish:
@@ -73,6 +74,41 @@ class Market():
         print("")
 
 
+    def find_midnight(self, prices, midnight_time):
+        """Finds the price closest to midnight"""
+        TIMESTAMP = 0
+        min_time_delta = None
+
+        for i in range(len(prices)):
+            if prices[i][TIMESTAMP] > midnight_time:                # Look for the start of a new day
+                delta_point_a = abs( prices[i][TIMESTAMP] - midnight_time )
+                delta_point_b = abs( prices[i-1][TIMESTAMP] - midnight_time )
+                if delta_point_a < delta_point_b:                   # See which point is closer to midnight
+                    midnight_value = prices[i][TIMESTAMP]
+                    break
+                else:
+                    midnight_value = prices[i-1][TIMESTAMP]
+                    break
+            else:
+                midnight_value = prices[i][TIMESTAMP]
+
+        if len(prices) == 0:
+            print(f"Midnight value not found")
+            midnight_value = 0
+
+        return midnight_value
+
+
+    def get_day_volume(self, volumes):
+        """Finds the volume for the day"""
+        TIMESTAMP = 0
+        day_volume = 0
+        for volume in volumes:
+            day_volume + volume
+
+        return day_volume
+
+
     def print_day(self, day):
         """Prints the key figures of a market day"""
         date = day.date
@@ -85,9 +121,9 @@ class Market():
               f"Volume: {volume}, Bearish: {day.is_bearish}")
 
 
-    def https_getter(self):
+    def https_getter(self, time_from, time_to):
         address = f"https://api.coingecko.com/api/v3/coins/{self.coin}/market_chart/range"\
-                  f"?vs_currency={self.currency}&from={self.time_from}&to={self.time_to}"
+                  f"?vs_currency={self.currency}&from={time_from}&to={time_to}"
         try:
             r = requests.get(address, timeout=self.TIMEOUT)
         except requests.exceptions.ReadTimeout:
@@ -98,11 +134,13 @@ class Market():
 
     def create_days(self):
         """Generates a list of Market_day objects"""
-        MS_IN_DAY = self.SECONDS_IN_DAY * 1000
-        start_of_day = self.time_from * 1000                        # Convert timestamp to ms
+        SECONDS_IN_HOUR = self.SECONDS_IN_HOUR
+        MS_IN_DAY = self.MS_IN_DAY
+        # start_of_day = self.time_from * 1000                        # Convert timestamp to ms
+        # end_of_day = start_of_day + MS_IN_DAY
         day_timestamp = 0
-        prices = self.prices
-        volumes = self.volumes
+        # prices = self.prices
+        # volumes = self.volumes
 
         TIMESTAMP = 0
         VALUE = 1
@@ -113,45 +151,94 @@ class Market():
         first_day = True                                            # Is this the first day in range?
         current_bearish = 0
 
-        # Iterates through datapoints
-        for i in range(len(prices)):
+        for start_of_day in range(self.time_from, self.time_to, MS_IN_DAY):
 
-            if prices[i][TIMESTAMP] > start_of_day:                 # Look for the start of a new day
-                day_close_value = prices[i-1][VALUE]                # previous datapoint was last days last datapoint.
-                date = self.human_readable_date(day_timestamp)         # make human readable
+            end_of_day = start_of_day + MS_IN_DAY
 
-                if not first_day:
-                    is_bearish = last_day_close_value > day_close_value
+            # Make a human readable timestamp
+            date = self.human_readable_date(day_timestamp)
 
-                    # Generates the Market_day object and adds it to the list
-                    market_days.append(
-                        Market_day(
-                            date,
-                            day_open_value,
-                            day_close_value,
-                            day_volume,
-                            is_bearish
-                            )
-                        )
+            # day_volumes = self.https_getter(start_of_day, end_of_day)["volumes"]
+            # day_volume = self.get_day_volume(day_volumes)
 
-                    current_bearish = self.update_bearish(current_bearish, is_bearish)
+            # Get a better resolution datapoints from around 00:00:00 midnight:
+            # Start of day
+            hour_before_midnight = start_of_day - SECONDS_IN_HOUR * 1000
+            hour_after_midnight = start_of_day + SECONDS_IN_HOUR
+            open_prices = self.https_getter(hour_before_midnight, hour_after_midnight)["prices"]
 
-                    # Setup variables for next day
-                    last_day = market_days[-1]
-                    last_day_close_value = last_day.close_value
+            # End of day
+            hour_before_midnight = end_of_day - SECONDS_IN_HOUR * 1000
+            hour_after_midnight = end_of_day + SECONDS_IN_HOUR
+            close_prices = self.https_getter(hour_before_midnight, hour_after_midnight)["prices"]
 
-                # Reset day variables to a new day
-                day_open_value = prices[i][VALUE]
-                day_volume = volumes[i][VALUE]
+            # Select the datapoint closest to 00:00:00 at start and end of the day
+            day_open_value = self.find_midnight(open_prices, start_of_day - MS_IN_DAY)
+            day_close_value = self.find_midnight(close_prices, start_of_day)
 
-                first_day = False
-                day_timestamp = start_of_day
-                start_of_day += MS_IN_DAY                           # Next day starts in 24h
+            # Generates the Market_day object and adds it to the list
+            market_days.append(
+                Market_day(
+                    date,
+                    day_open_value,
+                    day_close_value,
+                    day_volume
+                    )
+                )
 
-            else:
-                day_volume += volumes[i][VALUE]                     # Add datapoint volume to the days volume
+            day_timestamp = start_of_day
+
+            # start_of_day += MS_IN_DAY
 
         return market_days
+
+
+        # # Iterates through datapoints
+        # for i in range(len(prices)):
+
+        #     if prices[i][TIMESTAMP] > start_of_day:                 # Look for the start of a new day
+        #         day_close_value = prices[i-1][VALUE]                # previous datapoint was last days last datapoint.
+        #         date = self.human_readable_date(day_timestamp)         # make human readable
+
+        #         if not first_day:
+
+        #             # Get a better resolution datapoint from
+
+        #             open_prices = self.https_getter()["prices"]
+        #             colos_prices = self.https_getter()["prices"]
+
+        #             day_open_value = self.find_midnight(open_prices, start_of_day-MS_IN_DAY)
+        #             day_close_value = self.find_midnight(colos_prices, start_of_day)
+
+        #             # Generates the Market_day object and adds it to the list
+        #             market_days.append(
+        #                 Market_day(
+        #                     date,
+        #                     day_open_value,
+        #                     day_close_value,
+        #                     day_volume,
+        #                     is_bearish
+        #                     )
+        #                 )
+
+        #             current_bearish = self.update_bearish(current_bearish, is_bearish)
+
+        #             # Setup variables for next day
+        #             last_day = market_days[-1]
+        #             last_day_close_value = last_day.close_value
+
+        #         # Reset day variables to a new day
+        #         day_open_value = prices[i][VALUE]
+        #         day_volume = volumes[i][VALUE]
+
+        #         first_day = False
+        #         day_timestamp = start_of_day
+        #         start_of_day += MS_IN_DAY                           # Next day starts in 24h
+
+        #     else:
+        #         day_volume += volumes[i][VALUE]                     # Add datapoint volume to the days volume
+
+        # return market_days
 
     @staticmethod
     def human_readable_date(timestamp):

@@ -11,5 +11,5 @@ class Market_day():
         self.date = date
         self.open_value = start
         self.close_value = end
-        self.is_bearish = bearish
+        self.is_bearish = start > end
         self.trading_volume = volume
