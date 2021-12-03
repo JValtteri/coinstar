@@ -178,29 +178,24 @@ class Market():
             # print( datetime.datetime.fromtimestamp(start_of_day) )
 
             end_of_day = start_of_day + SECONDS_IN_DAY
+            start_of_sample = start_of_day - SECONDS_IN_HOUR
+            end_of_sample = end_of_day + SECONDS_IN_HOUR
 
             # Make a human readable timestamp
             date = self.human_readable_date(start_of_day*1000)
 
-            day_volumes = self.https_getter(start_of_day, end_of_day)["total_volumes"]
+            sample_data = self.https_getter(start_of_sample, end_of_sample)
+            day_volumes = sample_data["total_volumes"]
             day_volume = self.get_day_volume(day_volumes)
 
-            # Get a better resolution datapoints from around 00:00:00 midnight:
-            # Start of day
-            hour_before_midnight = start_of_day - SECONDS_IN_HOUR
-            hour_after_midnight = start_of_day + SECONDS_IN_HOUR
+            open_prices = sample_data["prices"]
+            # print( self.foo(open_prices) )
 
-            open_prices = self.https_getter(hour_before_midnight, hour_after_midnight)["prices"]
-            # self.foo(open_prices)
-
-            # End of day
-            hour_before_midnight = end_of_day - SECONDS_IN_HOUR
-            hour_after_midnight = end_of_day + SECONDS_IN_HOUR
-            close_prices = self.https_getter(hour_before_midnight, hour_after_midnight)["prices"]
+            close_prices = sample_data["prices"]
 
             # Select the datapoint closest to 00:00:00 at start and end of the day
-            day_open_value = self.find_midnight(open_prices, start_of_day - SECONDS_IN_DAY)
-            day_close_value = self.find_midnight(close_prices, start_of_day)
+            day_open_value = self.find_midnight(open_prices, start_of_day)
+            day_close_value = self.find_midnight(close_prices, end_of_day)
 
             # Generates the Market_day object and adds it to the list
             market_days.append(
@@ -212,8 +207,6 @@ class Market():
                     )
                 )
 
-            # start_of_day += MS_IN_DAY
-
         return market_days
 
 
@@ -224,7 +217,6 @@ class Market():
             atime = datetime.datetime.fromtimestamp( price[0]/1000 )
             value = price[1]
             print(f"{atime} {value}")
-
 
 
     @staticmethod
