@@ -178,7 +178,7 @@ class Market():
             # print( datetime.datetime.fromtimestamp(start_of_day) )
 
             end_of_day = start_of_day + SECONDS_IN_DAY
-            start_of_sample = start_of_day - SECONDS_IN_HOUR
+            start_of_sample = start_of_day# - SECONDS_IN_HOUR
             end_of_sample = end_of_day + SECONDS_IN_HOUR
 
             # Make a human readable timestamp
