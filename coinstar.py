@@ -121,8 +121,9 @@ def main(argv):
     print(f"\nStart date: {start_str}, End date: {end_str}\n")
     if show_days == True:
         market.print_days()
-    print(f"Max Bearish: {market.longest_bearish}")
-    print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
+    print(f"Max Bearish:\t\t{market.longest_bearish} days")
+    print(f"Max vomume was on:\t{market.max_volume_date}")
+    # print(f"\n\t\t\t{market.max_volume}")
 
     if show_raw:
         print_raw(market.prices, "Prices")
