@@ -71,7 +71,7 @@ def main(argv):
         print(short_help)
         sys.exit(2)
     for opt, arg in opts:
-        if opt in ('-h', 'help') or len(argv) == 0:
+        if opt in ('-h', '--help') or len(argv) == 0:
             print (helptext)
             sys.exit()
         elif opt in ("-s", "--start"):
