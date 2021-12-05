@@ -97,9 +97,9 @@ class Market():
                 # See which point is closer to midnight
                 if delta_point_a < delta_point_b:
                     midnight_value = prices[i][VALUE]
-                    print("Midnight timestamp")
                     stamp = prices[i][TIMESTAMP]
-                    print(datetime.datetime.fromtimestamp(stamp/1000))
+                    # print("Midnight timestamp")
+                    # print(datetime.datetime.fromtimestamp(stamp/1000))
                     break
                 else:
                     midnight_value = prices[i-1][VALUE]
@@ -117,12 +117,19 @@ class Market():
         return midnight_value
 
 
-    def get_day_volume(self, volumes):
+    def get_day_volume(self, start, end, volumes):
         """Finds the volume for the day"""
         TIMESTAMP = 0
         day_volume = 0
+        start = start * 1000
+        end = end * 1000
         for volume in volumes:
-            day_volume += volume[1]
+            # If datapoint is between start and end
+            if start < volume[0] < end:
+                day_volume += volume[1]
+            # If datapoint is past the end, stop iterating
+            elif volume[0] > end:
+                break
 
         return day_volume
 
@@ -172,6 +179,10 @@ class Market():
         market_days = []
         day_volume = 0
 
+        sample_data = self.https_getter(self.time_from, self.time_to)
+        day_volumes = sample_data["total_volumes"]
+        prices = sample_data["prices"]
+
         for start_of_day in range(self.time_from, self.time_to, SECONDS_IN_DAY):
 
             # print("Start of day")
@@ -184,18 +195,13 @@ class Market():
             # Make a human readable timestamp
             date = self.human_readable_date(start_of_day*1000)
 
-            sample_data = self.https_getter(start_of_sample, end_of_sample)
-            day_volumes = sample_data["total_volumes"]
-            day_volume = self.get_day_volume(day_volumes)
+            day_volume = self.get_day_volume(start_of_day, end_of_day, day_volumes)
 
-            open_prices = sample_data["prices"]
             # print( self.foo(open_prices) )
 
-            close_prices = sample_data["prices"]
-
             # Select the datapoint closest to 00:00:00 at start and end of the day
-            day_open_value = self.find_midnight(open_prices, start_of_day)
-            day_close_value = self.find_midnight(close_prices, end_of_day)
+            day_open_value = self.find_midnight(prices, start_of_day)
+            day_close_value = self.find_midnight(prices, end_of_day)
 
             # Generates the Market_day object and adds it to the list
             market_days.append(

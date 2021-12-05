@@ -53,10 +53,13 @@ def main(argv):
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
                '-r    --raw                 Show raw data\n' \
-               '-d    --data-points         Show formatted datapoints\n' \
+               '-f    --format              Show formatted datapoints\n' \
+               '-d    --days                Show day values:\n' \
+               '                              Open, Close, Volume, Bearish\n' \
                '-h    --help                Show this help\n'
     show_raw = False
     show_points = False
+    show_days = False
 
     if argv == []:
         # Start GUI
@@ -66,7 +69,7 @@ def main(argv):
 
     # Parse arguments
     try:
-        opts, args = getopt.getopt(argv,"hrds:e:",["start=","end=","help","data-points"])
+        opts, args = getopt.getopt(argv,"hrdfs:e:",["start=","end=","help","days","format"])
     except getopt.GetoptError:
         print(short_help)
         sys.exit(2)
@@ -78,8 +81,10 @@ def main(argv):
             start_str = arg
         elif opt in ("-e", "--end"):
             end_str = arg
-        elif opt in ("-d", "--data-points"):
+        elif opt in ("-f", "--format"):
             show_points = True
+        elif opt in ("-d", "--days"):
+            show_days = True
         elif opt in ("-r", "--raw"):
             show_raw = True
 
@@ -114,9 +119,8 @@ def main(argv):
 
     # Print program outputs
     print(f"\nStart date: {start_str}, End date: {end_str}\n")
-    # print(f"End date: {end_str}")
-
-    market.print_days()
+    if show_days == True:
+        market.print_days()
     print(f"Max Bearish: {market.longest_bearish}")
     # print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
 
