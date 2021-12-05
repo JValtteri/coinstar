@@ -157,6 +157,9 @@ class Market():
         except requests.exceptions.ReadTimeout:
             print(f"HTTP timeout {self.TIMEOUT} s exceeded")
             exit()
+        except:
+            print(f"HTTP connection error")
+            exit()
         self.request_count += 1
         if self.request_count >= self.throttle_limit:
             print("Throttling connection")
