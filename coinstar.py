@@ -97,10 +97,17 @@ def main(argv):
         print("Error: Both start and end date must be defined. Use -h for Help")
         sys.exit(2)
 
+    # Convert dates to POSIX
+    start = time_to_posix(start[0], start[1], start[2])
+    end = time_to_posix(end[0], end[1], end[2])
+    if end < start:
+        print("Error: End date is earlier than start date")
+        sys.exit(2)
+
     # Process market data
     market = Market(
-        time_from = time_to_posix(start[0], start[1], start[2]),
-        time_to = time_to_posix(end[0], end[1], end[2]),
+        time_from = start,
+        time_to = end,
         coin="bitcoin",
         currency="eur"
     )
