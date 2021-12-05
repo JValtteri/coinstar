@@ -26,6 +26,9 @@ class Market():
         self.request_count = 0
         self.throttle_limit = 49
 
+        self.prices = None
+        self.volumes = None
+
         # Generate a list of market days
         self.market_days = self.create_days()
 
@@ -182,6 +185,8 @@ class Market():
         sample_data = self.https_getter(self.time_from, self.time_to)
         day_volumes = sample_data["total_volumes"]
         prices = sample_data["prices"]
+        self.prices = prices
+        self.volumes = day_volumes
 
         for start_of_day in range(self.time_from, self.time_to, SECONDS_IN_DAY):
 
@@ -189,8 +194,8 @@ class Market():
             # print( datetime.datetime.fromtimestamp(start_of_day) )
 
             end_of_day = start_of_day + SECONDS_IN_DAY
-            start_of_sample = start_of_day# - SECONDS_IN_HOUR
-            end_of_sample = end_of_day + SECONDS_IN_HOUR
+            # start_of_sample = start_of_day
+            # end_of_sample = end_of_day + SECONDS_IN_HOUR
 
             # Make a human readable timestamp
             date = self.human_readable_date(start_of_day*1000)

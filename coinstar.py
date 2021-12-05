@@ -55,7 +55,7 @@ def main(argv):
                '-r    --raw                 Show raw data\n' \
                '-f    --format              Show formatted datapoints\n' \
                '-d    --days                Show day values:\n' \
-               '                              Open, Close, Volume, Bearish\n' \
+               '                            Open, Close, Volume, Bearish\n' \
                '-h    --help                Show this help\n'
     show_raw = False
     show_points = False
@@ -122,7 +122,7 @@ def main(argv):
     if show_days == True:
         market.print_days()
     print(f"Max Bearish: {market.longest_bearish}")
-    # print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
+    print(f"Max vomume was {market.max_volume_date}: {market.max_volume}")
 
     if show_raw:
         print_raw(market.prices, "Prices")
