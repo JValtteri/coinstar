@@ -18,7 +18,7 @@ class Market():
         self.TIMEOUT = 5
 
         self.time_from = time_from
-        self.time_to = time_to + self.SECONDS_IN_DAY #+ self.SECONDS_IN_HOUR
+        self.time_to = time_to + self.SECONDS_IN_DAY
         self.coin = coin
         self.currency = currency
 
@@ -48,7 +48,6 @@ class Market():
         for day in self.market_days:
             if day.is_bearish:
                 current_bearish += 1
-                # print(f"bearish now is {current_bearish}")
                 if current_bearish > longest_bearish:
                     longest_bearish = current_bearish
             else:
@@ -101,8 +100,6 @@ class Market():
                 if delta_point_a < delta_point_b:
                     midnight_value = prices[i][VALUE]
                     stamp = prices[i][TIMESTAMP]
-                    # print("Midnight timestamp")
-                    # print(datetime.datetime.fromtimestamp(stamp/1000))
                     break
                 else:
                     midnight_value = prices[i-1][VALUE]
@@ -192,20 +189,12 @@ class Market():
         self.volumes = day_volumes
 
         for start_of_day in range(self.time_from, self.time_to, SECONDS_IN_DAY):
-
-            # print("Start of day")
-            # print( datetime.datetime.fromtimestamp(start_of_day) )
-
             end_of_day = start_of_day + SECONDS_IN_DAY
-            # start_of_sample = start_of_day
-            # end_of_sample = end_of_day + SECONDS_IN_HOUR
 
             # Make a human readable timestamp
             date = self.human_readable_date(start_of_day*1000)
 
             day_volume = self.get_day_volume(start_of_day, end_of_day, day_volumes)
-
-            # print( self.foo(open_prices) )
 
             # Select the datapoint closest to 00:00:00 at start and end of the day
             day_open_value = self.find_midnight(prices, start_of_day)
@@ -222,15 +211,6 @@ class Market():
                 )
 
         return market_days
-
-
-    @staticmethod
-    def foo(prices):
-        print("Midnight values:")
-        for price in prices:
-            atime = datetime.datetime.fromtimestamp( price[0]/1000 )
-            value = price[1]
-            print(f"{atime} {value}")
 
 
     @staticmethod
