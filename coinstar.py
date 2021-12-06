@@ -117,17 +117,25 @@ def main(argv):
         currency="eur"
     )
 
-    # Print program outputs
+    ##################
+    # PROGRAM OUTPUT #
+    ##################
     print(f"\nStart date: {start_str}, End date: {end_str}\n")
+
     if show_days == True:
         market.print_days()
-    print(f"Max Bearish:\t\t{market.longest_bearish} days")
+    print(f"Max Bearish length:\t{market.longest_bearish} days")
     print(f"Max vomume was on:\t{market.max_volume_date}")
     print(f"Max volume was:\t\t{round(market.max_volume)} {market.currency}")
+
     if market.best_buy_and_sell['profit'] > 0:
-        print(f"Best day to buy was:\t{market.best_buy_and_sell['buy']}")
-        print(f"Best day to sell was:\t{market.best_buy_and_sell['sell']}")
-        print(f"Profit was:\t\t{round(market.best_buy_and_sell['profit'], 2)} {market.currency}")
+        buy_day = market.best_buy_and_sell['buy']
+        sell_day = market.best_buy_and_sell['sell']
+        profit = round(market.best_buy_and_sell['profit'], 2)
+
+        print(f"Best day to buy was:\t{buy_day}")
+        print(f"Best day to sell was:\t{sell_day}")
+        print(f"Profit was:\t\t{profit} {market.currency}")
     else:
         print("There was no opportunity to make profit")
 
