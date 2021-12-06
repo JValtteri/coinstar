@@ -47,7 +47,9 @@ coinstar.py -s <start date> -e <end date> <options>
   -s    --start  <start date> YYYY.MM.DD
   -e    --end    <end date>   YYYY.MM.DD
   -r    --raw                 Show raw data
-  -d    --data-points         Show formatted datapoints
+  -f    --format              Show formatted datapoints
+  -d    --days                Show day values:
+                              Open, Close, Volume, Bearish
   -h    --help                Show this help
 ```
 
