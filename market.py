@@ -56,9 +56,6 @@ class Market():
         return longest_bearish
 
 
-    def bearish_length(self):
-        pass
-
     def find_max_volume(self):
         """Finds the biggest volume day and returns: volume, date"""
         max_volume = 0
@@ -70,17 +67,28 @@ class Market():
 
         return max_volume, max_volume_day
 
-    def best_buy(self):
-        pass
 
-    def best_sell(self):
+    def best_buy_and_sell(self):
         pass
 
 
     def print_days(self):
+        """Print key figures for all days"""
         for day in self.market_days:
             self.print_day(day)
         print("")
+
+
+    def print_day(self, day):
+        """Prints the key figures of a market day"""
+        date = day.date
+        open_value = round(day.open_value, 3)
+        close_value = round(day.close_value, 3)
+        volume = round(day.trading_volume)
+        currency = self.currency
+
+        print(f"Date: {day.date}, Open: {open_value} {currency}, Close: {close_value} {currency}, " \
+              f"Volume: {volume}, Bearish: {day.is_bearish}")
 
 
     def find_midnight(self, prices, midnight_time):
@@ -132,18 +140,6 @@ class Market():
                 break
 
         return day_volume
-
-
-    def print_day(self, day):
-        """Prints the key figures of a market day"""
-        date = day.date
-        open_value = round(day.open_value, 3)
-        close_value = round(day.close_value, 3)
-        volume = round(day.trading_volume)
-        currency = self.currency
-
-        print(f"Date: {day.date}, Open: {open_value} {currency}, Close: {close_value} {currency}, " \
-              f"Volume: {volume}, Bearish: {day.is_bearish}")
 
 
     def https_getter(self, time_from, time_to):
