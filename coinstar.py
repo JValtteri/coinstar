@@ -22,45 +22,72 @@ def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
     timestamp = round( time_object.timestamp() )
     return timestamp
 
-def print_datapoints(datapoints, title="datapoints"):
+
+def print_raw(datapoints, title="datapoints"):
     """function to print the raw datapoints json"""
     print(title)
     print(json.dumps(datapoints, indent=4, sort_keys=True))
 
 
+def print_datapoints(prices, volumes):
+    """Function to print formatted datapoints"""
+    print(f"\nTime \t\t\t\t Price \t\t Volume")
+    for i in range(len(prices)):
+        timestamp = prices[i][0] / 1000                                 # Timestamp (ms -> s)
+        price = round( prices[i][1], 2)                                 # Price
+        volume = round( volumes[i][1] )                                 # Volume
+
+        if prices[i][0] != volumes[i][0]:                               # Check that timestamps match
+            print("Error! Timestamp mismatch")
+            sys.exit(2)
+        human_time = datetime.datetime.fromtimestamp(timestamp)         # Convert timestamp to human readable form
+
+        print(f"{human_time} \t {price} \t {volume}")
+
+
 def main(argv):
     """Main function"""
 
-    short_help = 'coinstar.py -s <start date> -e <end date> -r --help'
+    short_help = 'coinstar.py -s <start date> -e <end date> -r -d --help'
     helptext = 'coinstar.py <opts>\n\n' \
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
                '-r    --raw                 Show raw data\n' \
-               '-h    --help                Show this help\n' \
-               '-g    --gui                 Start GUI\n'
-    print_raw = False
+               '-f    --format              Show formatted datapoints\n' \
+               '-d    --days                Show day values:\n' \
+               '                            Open, Close, Volume, Bearish\n' \
+               '-g    --gui                 Start GUI\n' \
+               '-h    --help                Show this help\n'
+    show_raw = False
+    show_points = False
+    show_days = False
 
     if argv == []:
         # Start GUI
-        gui.Gui()
+        # ui.start()
+        print(short_help)
         sys.exit()
 
     # Parse arguments
     try:
-        opts, args = getopt.getopt(argv,"hrs:e:g",["start=","end=","help","gui"])
+        opts, args = getopt.getopt(argv,"hrdgfs:e:",["start=","end=","help","days","format","gui"])
     except getopt.GetoptError:
         print(short_help)
         sys.exit(2)
     for opt, arg in opts:
-        if opt in ('-h', 'help') or len(argv) is 0:
+        if opt in ('-h', '--help') or len(argv) == 0:
             print (helptext)
             sys.exit()
         elif opt in ("-s", "--start"):
             start_str = arg
         elif opt in ("-e", "--end"):
             end_str = arg
+        elif opt in ("-f", "--format"):
+            show_points = True
+        elif opt in ("-d", "--days"):
+            show_days = True
         elif opt in ("-r", "--raw"):
-            print_raw = True
+            show_raw = True
         elif opt in ("-g", "--gui"):
             gui.Gui()
             sys.exit()
@@ -79,23 +106,50 @@ def main(argv):
         print("Error: Both start and end date must be defined. Use -h for Help")
         sys.exit(2)
 
+    # Convert dates to POSIX
+    start = time_to_posix(start[0], start[1], start[2])
+    end = time_to_posix(end[0], end[1], end[2])
+    if end < start:
+        print("Error: End date is earlier than start date")
+        sys.exit(2)
+
     # Process market data
     market = Market(
-        time_from = time_to_posix(start[0], start[1], start[2]),
-        time_to = time_to_posix(end[0], end[1], end[2]),
+        time_from = start,
+        time_to = end,
         coin="bitcoin",
         currency="eur"
     )
 
-    # Print program outputs
-    print(f"Start date: {start_str}")
-    print(f"End date: {end_str}")
+    ##################
+    # PROGRAM OUTPUT #
+    ##################
+    print(f"\nStart date: {start_str}, End date: {end_str}\n")
 
-    market.print_days()
-    print(f"Max Bearish: {market.longest_bearish}")
-    if print_raw:
-        print_datapoints(market.prices, "Prices")
-        print_datapoints(market.volumes, "Volumes")
+    if show_days == True:
+        market.print_days()
+    print(f"Max Bearish length:\t{market.longest_bearish} days")
+    print(f"Max vomume was on:\t{market.max_volume_date}")
+    print(f"Max volume was:\t\t{round(market.max_volume)} {market.currency}")
+
+    if market.best_buy_and_sell['profit'] > 0:
+        buy_day = market.best_buy_and_sell['buy']
+        sell_day = market.best_buy_and_sell['sell']
+        profit = round(market.best_buy_and_sell['profit'], 2)
+
+        print(f"Best day to buy was:\t{buy_day}")
+        print(f"Best day to sell was:\t{sell_day}")
+        print(f"Profit was:\t\t{profit} {market.currency}")
+    else:
+        print("There was no opportunity to make profit")
+
+    if show_raw:
+        print_raw(market.prices, "Prices")
+        print_raw(market.volumes, "Volumes")
+
+    if show_points:
+        print_datapoints(market.prices, market.volumes)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
