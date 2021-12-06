@@ -26,6 +26,7 @@ class Market():
         self.request_count = 0
         self.throttle_limit = 49
 
+        # Variable names for dataseries'
         self.prices = None
         self.volumes = None
 
@@ -41,6 +42,8 @@ class Market():
         self.max_volume = max_volume
         self.max_volume_date = max_volume_date
 
+        self.best_sell_for_days()
+        self.best_buy_and_sell = self.find_best_buy_and_sell()
 
     def find_bearish(self):
         longest_bearish = 0
@@ -68,8 +71,41 @@ class Market():
         return max_volume, max_volume_day
 
 
-    def best_buy_and_sell(self):
-        pass
+    def best_sell_for_days(self):
+        """Finds the Best day to buy and best day to sell the bought coins"""
+        # Find the best day to sell coins bought each day
+        for i, buy_day in enumerate(self.market_days):
+            sell_profit = []
+
+            # Find the best day to sell coins bought on day i
+            # Iterates through days
+            for j in range( i, len(self.market_days) ):
+                sell_day_price = self.market_days[j].close_value
+                buy_day_price = buy_day.close_value
+                profit = sell_day_price - buy_day_price
+                timestamp = self.market_days[j].date
+                sell_profit.append((profit, timestamp))
+
+            # Takes the best profit and saves a tuple
+            # (profit, date) to market day
+            sell_profit.sort()
+            buy_day.sell_profit = sell_profit[-1]
+
+
+    def find_best_buy_and_sell(self):
+        """Finds the most profitable buy-sell date pair"""
+        max_profit_tuple = ()
+        max_profit_day = None
+        for buy_day in self.market_days:
+            if buy_day.sell_profit > max_profit_tuple:
+                max_profit_tuple = buy_day.sell_profit
+                max_profit_day = buy_day.date
+        max_profit = {
+            "buy": max_profit_day,
+            "sell": max_profit_tuple[1],
+            "profit": max_profit_tuple[0]
+        }
+        return max_profit
 
 
     def print_days(self):

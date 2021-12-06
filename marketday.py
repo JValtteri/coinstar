@@ -13,3 +13,4 @@ class Market_day():
         self.close_value = end
         self.is_bearish = start > end
         self.trading_volume = volume
+        self.sell_profit = None
