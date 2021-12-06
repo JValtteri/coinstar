@@ -127,7 +127,7 @@ def main(argv):
     if market.best_buy_and_sell['profit'] > 0:
         print(f"Best day to buy was:\t{market.best_buy_and_sell['buy']}")
         print(f"Best day to sell was:\t{market.best_buy_and_sell['sell']}")
-        print(f"Profit was:\t\t{round(market.best_buy_and_sell['profit'], 2)}")
+        print(f"Profit was:\t\t{round(market.best_buy_and_sell['profit'], 2)} {market.currency}")
     else:
         print("There was no opportunity to make profit")
 
