@@ -62,7 +62,7 @@ class Market():
     def find_max_volume(self):
         """Finds the biggest volume day and returns: volume, date"""
         max_volume = 0
-        max_volume_day = 0
+        max_volume_day = ''
         for day in self.market_days:
             if day.trading_volume > max_volume:
                 max_volume = day.trading_volume
@@ -143,13 +143,9 @@ class Market():
                 # See which point is closer to midnight
                 if delta_point_a < delta_point_b:
                     midnight_value = prices[i][VALUE]
-                    stamp = prices[i][TIMESTAMP]
                     break
                 else:
                     midnight_value = prices[i-1][VALUE]
-                    print("Midnight timestamp")
-                    stamp = prices[i][TIMESTAMP]
-                    print( datetime.datetime.fromtimestamp(stamp/1000) )
                     break
             else:
                 midnight_value = prices[i][VALUE]
