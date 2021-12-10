@@ -92,19 +92,39 @@ def main(argv):
         print(short_help)
         sys.exit(2)
 
+    ###############################
+    # Handling for various inputs #
+    ###############################
+
+    # Convert date seperators
+    start_str = start_str.replace('/', '.')
+    end_str = end_str.replace('/', '.')
+    start_str = start_str.replace('-', '.')
+    end_str = end_str.replace('-', '.')
+
     try:
         start = [int(i) for i in start_str.split('.')]
         end = [int(i) for i in end_str.split('.')]
     except ValueError:
-        print("Date format error: numbers only")
+        print("Date format error: numbers only\n" \
+              "Date format: YYYY.MM.DD")
         sys.exit(2)
     except UnboundLocalError:
         print("Error: Both start and end date must be defined. Use -h for Help")
         sys.exit(2)
+    if len(start) != 3 or len(end) != 3:
+        print("Date format error: Incomplete date\n" \
+              "Date format: YYYY.MM.DD")
+        sys.exit(2)
 
     # Convert dates to POSIX
-    start = time_to_posix(start[0], start[1], start[2])
-    end = time_to_posix(end[0], end[1], end[2])
+    try:
+        start = time_to_posix(start[0], start[1], start[2])
+        end = time_to_posix(end[0], end[1], end[2])
+    except:
+        print("Date error: Invalid date\n")
+        sys.exit(2)
+
     if end < start:
         print("Error: End date is earlier than start date")
         sys.exit(2)
@@ -120,12 +140,13 @@ def main(argv):
     ##################
     # PROGRAM OUTPUT #
     ##################
+
     print(f"\nStart date: {start_str}, End date: {end_str}\n")
 
     if show_days == True:
         market.print_days()
-    print(f"Max Bearish length:\t{market.longest_bearish} days")
-    print(f"Max vomume was on:\t{market.max_volume_date}")
+    print(f"Max bearish length:\t{market.longest_bearish} days")
+    print(f"Max volume was on:\t{market.max_volume_date}")
     print(f"Max volume was:\t\t{round(market.max_volume)} {market.currency}")
 
     if market.best_buy_and_sell['profit'] > 0:

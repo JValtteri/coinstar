@@ -210,12 +210,17 @@ class Market():
         market_days = []
         day_volume = 0
 
-        sample_data = self.https_getter(self.time_from, self.time_to)
-        day_volumes = sample_data["total_volumes"]
+        # Get data
+        sample_start = self.time_from
+        sample_end = self.time_to + self.SECONDS_IN_HOUR
+        sample_data = self.https_getter(sample_start, sample_end)
+
         prices = sample_data["prices"]
+        day_volumes = sample_data["total_volumes"]
         self.prices = prices
         self.volumes = day_volumes
 
+        # Generate days from data
         for start_of_day in range(self.time_from, self.time_to, SECONDS_IN_DAY):
             end_of_day = start_of_day + SECONDS_IN_DAY
 
