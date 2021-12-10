@@ -140,6 +140,7 @@ def main(argv):
     ##################
     # PROGRAM OUTPUT #
     ##################
+
     print(f"\nStart date: {start_str}, End date: {end_str}\n")
 
     if show_days == True:
