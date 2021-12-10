@@ -42,7 +42,7 @@ pip3 install -r requirements.txt
 ## Use in CLI ##
 
 ```
-coinstar.py -s <start date> -e <end date> <options>
+python3 coinstar.py -s <start date> -e <end date> <options>
 
   -s    --start  <start date> YYYY.MM.DD
   -e    --end    <end date>   YYYY.MM.DD
@@ -55,5 +55,5 @@ coinstar.py -s <start date> -e <end date> <options>
 
 For example:
 ```
-coinstar.py -s 2021.01.01 -e 2021.01.31
+python3 coinstar.py -s 2021.01.01 -e 2021.01.31
 ```
