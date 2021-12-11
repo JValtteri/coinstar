@@ -5,6 +5,7 @@
 
 import sys
 from  tkinter import *
+from  tkinter import ttk
 
 class Gui():
 
@@ -39,20 +40,79 @@ class Gui():
         # LABELS
 
         l_start = Label(root, text="Start date")
-        l_start.grid(row=2, column=0)
+        l_start.grid(row=2, column=0, sticky='e')
 
         l_end = Label(root, text="End date")
-        l_end.grid(row=4, column=0)
+        l_end.grid(row=5, column=0, sticky='e')
+
+        l_out = Label(root, text="Output")
+        l_out.grid(row=6, column=1)
+
+
+        l_bearish = Label(root, text="Max bearish was:")
+        l_bearish.grid(row=8, column=0, sticky='w')
+
+        l_bearish_unit = Label(root, text="days")
+        l_bearish_unit.grid(row=8, column=2, sticky='w')
+
+        l_volume_day = Label(root, text="Max volume was on:")
+        l_volume_day.grid(row=9, column=0, sticky='w')
+
+        l_volume = Label(root, text="Max volume was:")
+        l_volume.grid(row=10, column=0, sticky='w')
+
+
+
+        l_buy = Label(root, text="Buy:")
+        l_buy.grid(row=11, column=0, sticky='w')
+
+        l_sell = Label(root, text="Sell:")
+        l_sell.grid(row=12, column=0, sticky='w')
+
+        l_profit = Label(root, text="Profit:")
+        l_profit.grid(row=13, column=0, sticky='w')
+
+        # l_bearish_unit = Label(root, text="credits")
+        # l_bearish_unit.grid(row=10, column=2, sticky='w')
+
+        # SEPARATOR
+
+        separator = ttk.Separator(root, orient='horizontal')
+        separator.grid(row=7, column=0, columnspan=3, sticky='ew')#, padx=10, pady=10)
 
         # ENTRY FIELDS
 
         self.e_start = Entry(root, width=50)#, bg="#808080", fg="#000000")
-        self.e_start.grid(row=3, column=0, columnspan=3, padx=10, pady=10)
+        self.e_start.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
         self.e_start.insert(0, "YYYY.MM.DD")
 
         self.e_end = Entry(root, width=50)#, bg="#808080", fg="#000000")
-        self.e_end.grid(row=5, column=0, columnspan=3, padx=10, pady=10)
+        self.e_end.grid(row=5, column=1, columnspan=2, padx=10, pady=10)
         self.e_end.insert(0, "YYYY.MM.DD")
+
+        self.e_bear = Entry(root, width=30, bg="#CCCCCC")#, bg="#808080", fg="#000000")
+        self.e_bear.grid(row=8, column=1, columnspan=1, padx=10, pady=10)
+        # self.e_bear.insert(0, "YYYY.MM.DD")
+
+        self.e_vol_day = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
+        self.e_vol_day.grid(row=9, column=1, columnspan=2, padx=10, pady=10)
+        # self.e_bear.insert(0, "YYYY.MM.DD")
+
+        self.e_vol = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
+        self.e_vol.grid(row=10, column=1, columnspan=1, padx=10, pady=10)
+        # self.e_bear.insert(0, "YYYY.MM.DD")
+
+        self.e_buy = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
+        self.e_buy.grid(row=11, column=1, columnspan=1, padx=10, pady=10)
+        # self.e_bear.insert(0, "YYYY.MM.DD")
+
+        self.e_sell = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
+        self.e_sell.grid(row=12, column=1, columnspan=1, padx=10, pady=10)
+        # self.e_bear.insert(0, "YYYY.MM.DD")
+
+        self.e_profit = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
+        self.e_profit.grid(row=13, column=1, columnspan=1, padx=10, pady=10)
+        # self.e_bear.insert(0, "YYYY.MM.DD")
 
         # Start program
         root.mainloop()
