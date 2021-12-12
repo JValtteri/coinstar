@@ -9,12 +9,13 @@ from  tkinter import *
 from  tkinter import ttk
 from tkinter import messagebox
 import coinstar
+import status
 
 class Gui():
 
     def __init__(self):
 
-        # Setup the window
+        # SETUP THE WINDOW
 
         self.root = Tk()
         self.root.title("Coinstar GUI")
@@ -23,13 +24,8 @@ class Gui():
         # Bind ENTER key to get() function (GET Button)
         self.root.bind('<Return>', self.get)
 
-        self.status = coinstar.Status()
+        self.status = status.Status()
         self.example_format = "YYYY.MM.DD"
-
-        self.run()
-
-
-    def run(self):
 
         # INPUT
         self.create_input_area()
@@ -40,10 +36,15 @@ class Gui():
 
         # SEPARATOR
         separator = ttk.Separator(self.root, orient='horizontal')
-        separator.grid(row=7, column=0, columnspan=3, sticky='ew')#, padx=10, pady=10)
+        separator.grid(row=7, column=0, columnspan=3, sticky='ew')
 
         # OUTPUT
         self.ceate_output_area()
+
+        self.run()
+
+
+    def run(self):
 
         # START PROGRAM
         self.root.mainloop()
@@ -144,6 +145,7 @@ class Gui():
         s = self.status
 
         # GET INPUT VALUES
+
         start_str = self.e_start.get()
         end_str = self.e_end.get()
         s.start, s.end, s.error = coinstar.parse_date(start_str, end_str)
@@ -151,9 +153,11 @@ class Gui():
             messagebox.showwarning(title="Warning", message=s.error)
 
         # CLEAR OUTPUT FIELD FOR NEW VALUES
+
         self.clear_outputs()
 
         # DEFINE OUTPUT VALUES
+
         market = s.get_market()
         bearish = market.find_bearish()
         max_volume, volume_day = market.find_max_volume()
@@ -171,14 +175,17 @@ class Gui():
 
         self.update_units(s)
 
+
     def update_units(self, s):
         """Update displayed units"""
         self.units.set(s.currency)
+
 
     def reset(self):
         """Reset Button action"""
         self.clear_outputs()
         self.reset_inputs()
+
 
     def clear_outputs(self):
         """Clears the output fields"""
@@ -189,6 +196,7 @@ class Gui():
         self.e_sell.delete("0", END)
         self.e_profit.delete("0", END)
 
+
     def reset_inputs(self):
         """Resets the input fields to examples"""
         self.e_start.delete(0, END)
@@ -196,9 +204,11 @@ class Gui():
         self.e_start.insert(0, "YYYY.MM.DD")
         self.e_end.insert(0, "YYYY.MM.DD")
 
+
     def clear_start(self, event=None):
         if self.e_start.get() == self.example_format:
             self.e_start.delete(0, END)
+
 
     def clear_end(self, event=None):
         if self.e_end.get() == self.example_format:

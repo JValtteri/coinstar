@@ -6,30 +6,8 @@
 import json
 import datetime
 import sys, getopt
-from market import Market
+import status
 import gui
-
-class Status():
-
-    def __init__(self):
-
-        self.start = None
-        self.end = None
-        self.market = None
-        self.coin="bitcoin"
-        self.currency="eur"
-
-        self.error = False
-
-    def get_market(self):
-        """Returns a valid"""
-        self.market = Market(
-            time_from = self.start,
-            time_to = self.end,
-            coin=self.coin,
-            currency=self.currency
-        )
-        return self.market
 
 
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
@@ -123,7 +101,7 @@ def main(argv):
     show_points = False
     show_days = False
 
-    s = Status()
+    s = status.Status()
 
     if argv == []:
         # Start GUI
