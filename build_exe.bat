@@ -4,7 +4,7 @@ cd venv\Scripts
 call activate.bat
 cd ../..
 @echo Build EXE
-pyinstaller gui.py --onedir --noconsole --n coinstar_gui
+pyinstaller gui.py --onedir --noconsole -n coinstar_gui
 @echo Exit Virtual Enviroment
 deactivate
 pause
