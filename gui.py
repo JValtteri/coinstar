@@ -7,6 +7,7 @@ from getopt import error
 import sys
 from  tkinter import *
 from  tkinter import ttk
+from tkinter import messagebox
 import coinstar
 
 class Gui():
@@ -130,6 +131,8 @@ class Gui():
         start_str = self.e_start.get()
         end_str = self.e_end.get()
         s.start, s.end, s.error = coinstar.parse_date(start_str, end_str)
+        if s.error:
+            messagebox.showwarning(title="Warning", message=s.error)
 
         self.clear_outputs()
 
