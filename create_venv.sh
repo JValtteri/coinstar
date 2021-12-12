@@ -1,7 +1,7 @@
 #!/bin/bash
 python -m venv venv
-./venv.sh
+source venv.sh
 ./install.sh
-pip install pyinstaller
-pip install --upgrade pyinstaller
+pip3 install pyinstaller
+pip3 install --upgrade pyinstaller
 deactivate
