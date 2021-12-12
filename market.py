@@ -45,6 +45,7 @@ class Market():
         self.best_sell_for_days()
         self.best_buy_and_sell = self.find_best_buy_and_sell()
 
+
     def find_bearish(self):
         longest_bearish = 0
         current_bearish = 0
@@ -159,7 +160,6 @@ class Market():
 
     def get_day_volume(self, start, end, volumes):
         """Finds the volume for the day"""
-        TIMESTAMP = 0
         day_volume = 0
         start = start * 1000
         end = end * 1000
@@ -201,11 +201,7 @@ class Market():
 
     def create_days(self):
         """Generates a list of Market_day objects"""
-        SECONDS_IN_HOUR = self.SECONDS_IN_HOUR
         SECONDS_IN_DAY = self.SECONDS_IN_DAY
-
-        TIMESTAMP = 0
-        VALUE = 1
 
         market_days = []
         day_volume = 0
@@ -229,19 +225,20 @@ class Market():
 
             day_volume = self.get_day_volume(start_of_day, end_of_day, day_volumes)
 
-            # Select the datapoint closest to 00:00:00 at start and end of the day
-            day_open_value = self.find_midnight(prices, start_of_day)
-            day_close_value = self.find_midnight(prices, end_of_day)
+            if day_volume > 0:
+                # Select the datapoint closest to 00:00:00 at start and end of the day
+                day_open_value = self.find_midnight(prices, start_of_day)
+                day_close_value = self.find_midnight(prices, end_of_day)
 
-            # Generates the Market_day object and adds it to the list
-            market_days.append(
-                Market_day(
-                    date,
-                    day_open_value,
-                    day_close_value,
-                    day_volume
+                # Generates the Market_day object and adds it to the list
+                market_days.append(
+                    Market_day(
+                        date,
+                        day_open_value,
+                        day_close_value,
+                        day_volume
+                        )
                     )
-                )
 
         return market_days
 
