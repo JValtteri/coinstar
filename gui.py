@@ -14,118 +14,129 @@ class Gui():
 
     def __init__(self):
 
+        # Setup the window
+
+        self.root = Tk()
+        self.root.title("Coinstar GUI")
+        # root.configure(bg="#050505")
+
+        # Bind ENTER key to get() function (GET Button)
+        self.root.bind('<Return>', self.get)
+
         self.status = coinstar.Status()
+        self.example_format = "YYYY.MM.DD"
+
         self.run()
+
 
     def run(self):
 
-        # Setup the window
-        root = Tk()
-        root.title("Coinstar GUI")
-
-        # Bind ENTER key to get() function (GET Button)
-        root.bind('<Return>', self.get)
-
-        # root.configure(bg="#050505")
+        # INPUT
+        self.create_input_area()
+        self.reset_inputs()
 
         # BUTTONS
+        self.create_buttons()
 
-        btn_get = Button(root, text="Get", command=self.get, bg="#80C080", padx=30, pady=15)
+        # SEPARATOR
+        separator = ttk.Separator(self.root, orient='horizontal')
+        separator.grid(row=7, column=0, columnspan=3, sticky='ew')#, padx=10, pady=10)
+
+        # OUTPUT
+        self.ceate_output_area()
+
+        # START PROGRAM
+        self.root.mainloop()
+
+
+    def create_buttons(self):
+        """Create buttons"""
+        btn_get = Button(self.root, text="Get", command=self.get, bg="#80C080", padx=30, pady=15)
         btn_get.grid(row=90, column=1, padx=0, pady=5)
 
-        btn_reset = Button(root, text="Reset", command=self.reset, padx=10, pady=10)
+        btn_reset = Button(self.root, text="Reset", command=self.reset, padx=10, pady=10)
         btn_reset.grid(row=90, column=0, padx=0, pady=5)
 
-        btn_close = Button(root, text="Close", command=close, bg="#C08080", padx=10, pady=10)
+        btn_close = Button(self.root, text="Close", command=close, bg="#C08080", padx=10, pady=10)
         btn_close.grid(row=90, column=2, padx=10, pady=10)
+
+
+    def create_input_area(self):
+        """Creates input area GUI"""
 
         # LABELS
 
-        l_start = Label(root, text="Start date")
+        l_start = Label(self.root, text="Start date")
         l_start.grid(row=2, column=0, sticky='e')
 
-        l_end = Label(root, text="End date")
+        l_end = Label(self.root, text="End date")
         l_end.grid(row=5, column=0, sticky='e')
 
-        # l_out = Label(root, text="Output")
-        # l_out.grid(row=6, column=0, padx=10, sticky='w')
+        # ENTRY FIELDS
 
-        l_bearish = Label(root, text="Max bearish was:")
+        self.e_start = Entry(self.root, width=30)#, bg="#808080", fg="#000000")
+        self.e_start.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
+        self.e_start.bind("<1>", self.clear_start)
+
+        self.e_end = Entry(self.root, width=30)#, bg="#808080", fg="#000000")
+        self.e_end.grid(row=5, column=1, columnspan=2, padx=10, pady=10)
+        self.e_end.bind("<1>", self.clear_end)
+
+
+    def ceate_output_area(self):
+        """Creates output area GUI"""
+
+        # LABELS
+
+        l_bearish = Label(self.root, text="Max bearish was:")
         l_bearish.grid(row=8, column=0, padx=10, sticky='w')
 
-        l_bearish_unit = Label(root, text="days")
+        l_bearish_unit = Label(self.root, text="days")
         l_bearish_unit.grid(row=8, column=2, sticky='w')
 
         self.units = StringVar()
         self.units.set("")
 
-        l_vol_unit = Label(root, textvariable=self.units)
+        l_vol_unit = Label(self.root, textvariable=self.units)
         l_vol_unit.grid(row=10, column=2, sticky='w')
 
-        l_profit_unit = Label(root, textvariable=self.units)
+        l_profit_unit = Label(self.root, textvariable=self.units)
         l_profit_unit.grid(row=13, column=2, sticky='w')
 
-        l_volume_day = Label(root, text="Max volume was on:")
+        l_volume_day = Label(self.root, text="Max volume was on:")
         l_volume_day.grid(row=9, column=0, padx=10, sticky='w')
 
-        l_volume = Label(root, text="Max volume was:")
+        l_volume = Label(self.root, text="Max volume was:")
         l_volume.grid(row=10, column=0, padx=10, sticky='w')
 
-        l_buy = Label(root, text="Buy:")
+        l_buy = Label(self.root, text="Buy:")
         l_buy.grid(row=11, column=0, padx=10, sticky='w')
 
-        l_sell = Label(root, text="Sell:")
+        l_sell = Label(self.root, text="Sell:")
         l_sell.grid(row=12, column=0, padx=10, sticky='w')
 
-        l_profit = Label(root, text="Profit:")
+        l_profit = Label(self.root, text="Profit:")
         l_profit.grid(row=13, column=0, padx=10, sticky='w')
-
-        # l_bearish_unit = Label(root, text="credits")
-        # l_bearish_unit.grid(row=10, column=2, sticky='w')
-
-        # SEPARATOR
-
-        separator = ttk.Separator(root, orient='horizontal')
-        separator.grid(row=7, column=0, columnspan=3, sticky='ew')#, padx=10, pady=10)
 
         # ENTRY FIELDS
 
-        self.e_start = Entry(root, width=30)#, bg="#808080", fg="#000000")
-        self.e_start.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
-        self.e_start.bind("<1>", self.clear_start)
-
-        self.e_end = Entry(root, width=30)#, bg="#808080", fg="#000000")
-        self.e_end.grid(row=5, column=1, columnspan=2, padx=10, pady=10)
-        self.e_end.bind("<1>", self.clear_end)
-
-        self.reset_inputs()
-
-        self.e_bear = Entry(root, width=10, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_bear = Entry(self.root, width=10, bg="#EEEEEE")#, bg="#808080", fg="#000000")
         self.e_bear.grid(row=8, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
-        # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_vol_day = Entry(root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_vol_day = Entry(self.root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
         self.e_vol_day.grid(row=9, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
-        # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_vol = Entry(root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_vol = Entry(self.root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
         self.e_vol.grid(row=10, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
-        # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_buy = Entry(root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_buy = Entry(self.root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
         self.e_buy.grid(row=11, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
-        # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_sell = Entry(root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_sell = Entry(self.root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
         self.e_sell.grid(row=12, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
-        # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_profit = Entry(root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_profit = Entry(self.root, width=25, bg="#EEEEEE")#, bg="#808080", fg="#000000")
         self.e_profit.grid(row=13, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
-        # self.e_bear.insert(0, "YYYY.MM.DD")
-
-        # START PROGRAM
-        root.mainloop()
 
 
     def get(self, event=None):
@@ -186,10 +197,12 @@ class Gui():
         self.e_end.insert(0, "YYYY.MM.DD")
 
     def clear_start(self, event=None):
-        self.e_start.delete(0, END)
+        if self.e_start.get() == self.example_format:
+            self.e_start.delete(0, END)
 
     def clear_end(self, event=None):
-        self.e_end.delete(0, END)
+        if self.e_end.get() == self.example_format:
+            self.e_end.delete(0, END)
 
 
 def close():
