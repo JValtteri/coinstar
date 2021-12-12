@@ -7,3 +7,6 @@ pip3 install --upgrade pip
 
 echo "Installing requirements"
 pip3 install -r requirements.txt
+
+echo "Installing tkinter"
+sudo apt-get install python-tk -y
