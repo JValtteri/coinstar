@@ -13,6 +13,7 @@ __*
 build/*
 venv/*
 *.spec
+dist/*
 
 # Config and log
 *.log
