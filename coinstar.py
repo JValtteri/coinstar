@@ -9,6 +9,26 @@ import sys, getopt
 from market import Market
 import gui
 
+class Status():
+
+    def __init__(self):
+
+        self.start = None
+        self.end = None
+        self.market = None
+
+        self.error = False
+
+    def get_market(self):
+        """Returns a valid"""
+        self.market = Market(
+            time_from = self.start,
+            time_to = self.end,
+            coin="bitcoin",
+            currency="eur"
+        )
+        return self.market
+
 
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
     """Takes date and time and returns POSIX timestamp in seconds"""
@@ -63,7 +83,7 @@ def parse_date(start_str, end_str):
         return None, None, error
     except UnboundLocalError:
         print("Error: Both start and end date must be defined. Use -h for Help")
-        return start, end, error
+        return None, None, error
     if len(start) != 3 or len(end) != 3:
         error = "Date format error: Incomplete date\n" \
                 "Date format: YYYY.MM.DD"
@@ -100,6 +120,8 @@ def main(argv):
     show_raw = False
     show_points = False
     show_days = False
+
+    s = Status()
 
     if argv == []:
         # Start GUI
@@ -139,19 +161,14 @@ def main(argv):
     # Handling for various inputs #
     ###############################
 
-    start, end, error = parse_date(start_str, end_str)
+    s.start, s.end, error = parse_date(start_str, end_str)
 
     if error:
         print(error)
         sys.exit(2)
 
     # Process market data
-    market = Market(
-        time_from = start,
-        time_to = end,
-        coin="bitcoin",
-        currency="eur"
-    )
+    market = s.get_market()
 
     ##################
     # PROGRAM OUTPUT #
