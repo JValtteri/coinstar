@@ -44,6 +44,45 @@ def print_datapoints(prices, volumes):
 
         print(f"{human_time} \t {price} \t {volume}")
 
+def parse_date(start_str, end_str):
+    """Make date_strs to posix dates"""
+    error = False
+
+    # Convert date seperators
+    start_str = start_str.replace('/', '.')
+    end_str = end_str.replace('/', '.')
+    start_str = start_str.replace('-', '.')
+    end_str = end_str.replace('-', '.')
+
+    try:
+        start = [int(i) for i in start_str.split('.')]
+        end = [int(i) for i in end_str.split('.')]
+    except ValueError:
+        error = "Date format error: numbers only\n" \
+                "Date format: YYYY.MM.DD"
+        return None, None, error
+    except UnboundLocalError:
+        print("Error: Both start and end date must be defined. Use -h for Help")
+        return start, end, error
+    if len(start) != 3 or len(end) != 3:
+        error = "Date format error: Incomplete date\n" \
+                "Date format: YYYY.MM.DD"
+        return start, end, error
+
+    # Convert dates to POSIX
+    try:
+        start = time_to_posix(start[0], start[1], start[2])
+        end = time_to_posix(end[0], end[1], end[2])
+    except:
+        error = "Date error: Invalid date\n"
+        return start, end, error
+
+    if end < start:
+        error = "Error: End date is earlier than start date"
+        return start, end, error
+
+    return start, end, error
+
 
 def main(argv):
     """Main function"""
@@ -100,37 +139,10 @@ def main(argv):
     # Handling for various inputs #
     ###############################
 
-    # Convert date seperators
-    start_str = start_str.replace('/', '.')
-    end_str = end_str.replace('/', '.')
-    start_str = start_str.replace('-', '.')
-    end_str = end_str.replace('-', '.')
+    start, end, error = parse_date(start_str, end_str)
 
-    try:
-        start = [int(i) for i in start_str.split('.')]
-        end = [int(i) for i in end_str.split('.')]
-    except ValueError:
-        print("Date format error: numbers only\n" \
-              "Date format: YYYY.MM.DD")
-        sys.exit(2)
-    except UnboundLocalError:
-        print("Error: Both start and end date must be defined. Use -h for Help")
-        sys.exit(2)
-    if len(start) != 3 or len(end) != 3:
-        print("Date format error: Incomplete date\n" \
-              "Date format: YYYY.MM.DD")
-        sys.exit(2)
-
-    # Convert dates to POSIX
-    try:
-        start = time_to_posix(start[0], start[1], start[2])
-        end = time_to_posix(end[0], end[1], end[2])
-    except:
-        print("Date error: Invalid date\n")
-        sys.exit(2)
-
-    if end < start:
-        print("Error: End date is earlier than start date")
+    if error:
+        print(error)
         sys.exit(2)
 
     # Process market data

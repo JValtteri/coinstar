@@ -3,6 +3,7 @@
 # J.V.Ojala 17.11.2021
 # GUI (coinstar)
 
+from getopt import error
 import sys
 from  tkinter import *
 from  tkinter import ttk
@@ -122,8 +123,9 @@ class Gui():
 
     def get(self):
         """Get start market data from 'start' to 'end'"""
-        start = self.e_start.get()
-        end = self.e_end.get()
+        start_str = self.e_start.get()
+        end_str = self.e_end.get()
+        start, end, error = coinstar.parse_date(start_str, end_str)
 
 def close():
     sys.exit()
