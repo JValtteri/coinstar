@@ -1,6 +1,7 @@
 # Personal notes and tools
 *.txt
 *.bat
+*.ods
 
 # Compiled
 *.pyc

@@ -128,30 +128,30 @@ class Market():
               f"Volume: {volume}, Bearish: {day.is_bearish}")
 
 
-    def find_midnight(self, prices, midnight_time):
+    def find_midnight(self, datapoints, midnight_time):
         """Finds the price closest to midnight"""
         TIMESTAMP = 0
         VALUE = 1
         midnight_time = midnight_time * 1000                        # Convert to MS
 
-        for i in range(len(prices)):
+        for i in range(len(datapoints)):
             # Look for the point closest to midnight
             # i.e. smalles delta time
-            if prices[i][TIMESTAMP] > midnight_time:
-                delta_point_a = abs( prices[i][TIMESTAMP] - midnight_time )
-                delta_point_b = abs( prices[i-1][TIMESTAMP] - midnight_time )
+            if datapoints[i][TIMESTAMP] > midnight_time:
+                delta_point_a = abs( datapoints[i][TIMESTAMP] - midnight_time )
+                delta_point_b = abs( datapoints[i-1][TIMESTAMP] - midnight_time )
 
                 # See which point is closer to midnight
                 if delta_point_a < delta_point_b:
-                    midnight_value = prices[i][VALUE]
+                    midnight_value = datapoints[i][VALUE]
                     break
                 else:
-                    midnight_value = prices[i-1][VALUE]
+                    midnight_value = datapoints[i-1][VALUE]
                     break
             else:
-                midnight_value = prices[i][VALUE]
+                midnight_value = datapoints[i][VALUE]
 
-        if len(prices) == 0:
+        if len(datapoints) == 0:
             # print(f"Midnight value not found")
             midnight_value = 0
 
@@ -223,7 +223,7 @@ class Market():
             # Make a human readable timestamp
             date = self.human_readable_date(start_of_day*1000)
 
-            day_volume = self.get_day_volume(start_of_day, end_of_day, day_volumes)
+            day_volume = self.find_midnight(day_volumes, start_of_day)
 
             if day_volume > 0:
                 # Select the datapoint closest to 00:00:00 at start and end of the day
@@ -247,7 +247,8 @@ class Market():
     def human_readable_date(timestamp):
         """Make a human readable time from timestamp"""
         timestamp = timestamp / 1000                            # Convert timestamp from ms to s
-        date = datetime.datetime.fromtimestamp(timestamp)       # Make human readable
+        date = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc )       # Make human readable
         date = str(date).split(" ")[0]                          # Remove the time from the date
         date = str.replace(date, '-', '.')
         return date
+

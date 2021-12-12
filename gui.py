@@ -21,11 +21,12 @@ class Gui():
         self.root.title("Coinstar GUI")
         # root.configure(bg="#050505")
 
-        # Bind ENTER key to get() function (GET Button)
-        self.root.bind('<Return>', self.get)
-
+        # Creates an object to hold the status of the program
         self.status = status.Status()
         self.example_format = "YYYY.MM.DD"
+
+        # Bind ENTER key to get() function (GET Button)
+        self.root.bind('<Return>', self.get)
 
         # INPUT
         self.create_input_area()

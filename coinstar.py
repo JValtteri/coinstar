@@ -13,7 +13,7 @@ import gui
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
     """Takes date and time and returns POSIX timestamp in seconds"""
     try:
-        time_object = datetime.datetime(year, mon, day, hour, min, sec)
+        time_object = datetime.datetime(year, mon, day, hour, min, sec, tzinfo=datetime.timezone.utc)
     except ValueError:
         print("Date format error: invalid date format\n" \
               "Date format: YYYY.MM.DD")
@@ -40,7 +40,7 @@ def print_datapoints(prices, volumes):
         if prices[i][0] != volumes[i][0]:                               # Check that timestamps match
             print("Error! Timestamp mismatch")
             sys.exit(2)
-        human_time = datetime.datetime.fromtimestamp(timestamp)         # Convert timestamp to human readable form
+        human_time = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc)         # Convert timestamp to human readable form
 
         print(f"{human_time} \t {price} \t {volume}")
 
