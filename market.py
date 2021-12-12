@@ -234,14 +234,15 @@ class Market():
             day_close_value = self.find_midnight(prices, end_of_day)
 
             # Generates the Market_day object and adds it to the list
-            market_days.append(
-                Market_day(
-                    date,
-                    day_open_value,
-                    day_close_value,
-                    day_volume
+            if day_volume > 0:
+                market_days.append(
+                    Market_day(
+                        date,
+                        day_open_value,
+                        day_close_value,
+                        day_volume
+                        )
                     )
-                )
 
         return market_days
 
