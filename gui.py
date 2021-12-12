@@ -6,6 +6,8 @@
 import sys
 from  tkinter import *
 from  tkinter import ttk
+import coinstar
+import market
 
 class Gui():
 
@@ -90,28 +92,28 @@ class Gui():
         self.e_end.grid(row=5, column=1, columnspan=2, padx=10, pady=10)
         self.e_end.insert(0, "YYYY.MM.DD")
 
-        self.e_bear = Entry(root, width=30, bg="#CCCCCC")#, bg="#808080", fg="#000000")
-        self.e_bear.grid(row=8, column=1, columnspan=1, padx=10, pady=10)
+        self.e_bear = Entry(root, width=30, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_bear.grid(row=8, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
         # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_vol_day = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
-        self.e_vol_day.grid(row=9, column=1, columnspan=2, padx=10, pady=10)
+        self.e_vol_day = Entry(root, width=40, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_vol_day.grid(row=9, column=1, columnspan=2, padx=10, pady=10, sticky='ew')
         # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_vol = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
-        self.e_vol.grid(row=10, column=1, columnspan=1, padx=10, pady=10)
+        self.e_vol = Entry(root, width=30, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_vol.grid(row=10, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
         # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_buy = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
-        self.e_buy.grid(row=11, column=1, columnspan=1, padx=10, pady=10)
+        self.e_buy = Entry(root, width=30, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_buy.grid(row=11, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
         # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_sell = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
-        self.e_sell.grid(row=12, column=1, columnspan=1, padx=10, pady=10)
+        self.e_sell = Entry(root, width=30, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_sell.grid(row=12, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
         # self.e_bear.insert(0, "YYYY.MM.DD")
 
-        self.e_profit = Entry(root, width=40, bg="#CCCCCC")#, bg="#808080", fg="#000000")
-        self.e_profit.grid(row=13, column=1, columnspan=1, padx=10, pady=10)
+        self.e_profit = Entry(root, width=30, bg="#EEEEEE")#, bg="#808080", fg="#000000")
+        self.e_profit.grid(row=13, column=1, columnspan=1, padx=10, pady=10, sticky='ew')
         # self.e_bear.insert(0, "YYYY.MM.DD")
 
         # Start program
