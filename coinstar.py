@@ -16,6 +16,8 @@ class Status():
         self.start = None
         self.end = None
         self.market = None
+        self.coin="bitcoin"
+        self.currency="eur"
 
         self.error = False
 
@@ -24,8 +26,8 @@ class Status():
         self.market = Market(
             time_from = self.start,
             time_to = self.end,
-            coin="bitcoin",
-            currency="eur"
+            coin=self.coin,
+            currency=self.currency
         )
         return self.market
 
