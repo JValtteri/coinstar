@@ -1,4 +1,4 @@
-#!/bin/beash
+#!/bin/bash
 python -m venv venv
 ./venv.sh
 ./install.sh
