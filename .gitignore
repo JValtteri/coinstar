@@ -12,7 +12,8 @@ __*
 *.vscode
 build/*
 venv/*
-# *.spec
+*.spec
+dist/*
 
 # Config and log
 *.log
