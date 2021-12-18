@@ -84,7 +84,7 @@ python3 coinstar.py -s 2021.01.01 -e 2021.01.31
 
 ## GUI only features ##
 
-**GUI only** **does** have features to show:
+**GUI only** has features to show:
 - Longest **bearish trend** within a *given date range*
 - Date within a *given date range* with the **highest trading volume**
 - The **best day** for **buying**, *and* the **best day** for **selling** the bought coin to ***maximize profits***.
