@@ -78,7 +78,8 @@ python3 coinstar.py -s 2021.01.01 -e 2021.01.31
 
 ## Setup GUI only (Windows) ##
 
-- [Download standalone Windows excecutible](https://www.dropbox.com/s/ou1eq90230b5qng/coinstar_gui.zip?dl=0)
+- Download standalone [Windows excecutible](https://github.com/JValtteri/coinstar/releases/)
+- Download standalone [Linux excecutible](https://github.com/JValtteri/coinstar/releases/)
 - Extract the zip file and 
 - run **coinstart_gui.exe**.
 
