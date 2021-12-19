@@ -217,6 +217,10 @@ class Market():
         if error:
             return None, error
 
+        if sample_data['prices'] == []:
+            error = "No data in range"
+            return None, error
+
         prices = sample_data["prices"]
         day_volumes = sample_data["total_volumes"]
         self.prices = prices
