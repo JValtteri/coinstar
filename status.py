@@ -26,4 +26,4 @@ class Status():
             coin=self.coin,
             currency=self.currency
         )
-        return self.market
+        return self.market, self.market.error

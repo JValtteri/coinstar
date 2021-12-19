@@ -159,7 +159,9 @@ class Gui():
 
         # DEFINE OUTPUT VALUES
 
-        market = s.get_market()
+        market, error = s.get_market()
+        if error:
+            messagebox.showerror(title="Warning", message=error)
         bearish = market.find_bearish()
         max_volume, volume_day = market.find_max_volume()
         max_volume = round(max_volume)
