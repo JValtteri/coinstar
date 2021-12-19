@@ -27,6 +27,37 @@ python3
 $ apt-get install python3
 ```
 
+### (Optional) Create and activate a virtual enviroment ###
+
+**Windows**
+```
+create_venv.bat
+venv.bat
+```
+
+**Linux**
+```
+$ create_sh.bat
+$ venv.sh
+```
+
+Command to exit python-venv is: 
+```
+deactivate
+```
+
+**(Optional) manual Windows**
+```
+python -m venv venv
+venv/Scripts/activate.bat
+```
+
+**(Optional) manual Linux**
+```
+$ python -m venv venv
+$ venv/bin/activate
+```
+
 ### Install requirements ###
 
 **Windows:**
@@ -39,11 +70,19 @@ install.bat
 $ install.sh
 ```
 
-**Manual:**
+**(Optional) manual Windows:**
 ```
-sudo apt-get -y install python3-pip
 pip3 install --upgrade pip
 pip3 install -r requirements.txt
+```
+
+**(Optional) manual Linux:**
+```
+$ sudo apt-get update
+$ sudo apt-get -y install python3-pip
+$ sudo apt-get install python3-tk -y
+$ pip3 install --upgrade pip
+$ pip3 install -r requirements.txt
 ```
 
 ## Use in CLI ##
