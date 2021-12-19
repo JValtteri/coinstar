@@ -76,7 +76,7 @@ python3 coinstar.py -s 2021.01.01 -e 2021.01.31
 2. Enter **start** and **end dates** in their respective fields
 3. press **GET**
 
-## Setup GUI only (Windows) ##
+## Setup GUI only (Windows & Linux) ##
 
 - Download standalone [Windows excecutible](https://github.com/JValtteri/coinstar/releases/)
 - Download standalone [Linux excecutible](https://github.com/JValtteri/coinstar/releases/)
