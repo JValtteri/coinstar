@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "Updating package list"
+sudo apt-get update
+
 echo "Installing pip3"
 sudo apt-get -y install python3-pip
 
