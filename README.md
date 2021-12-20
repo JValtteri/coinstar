@@ -38,13 +38,15 @@ venv.bat
 **Linux**
 ```
 $ create_sh.bat
-$ venv.sh
+$ source venv.sh
 ```
 
 Command to exit python-venv is: 
 ```
 deactivate
 ```
+
+---
 
 **(Optional) manual Windows**
 ```
@@ -69,6 +71,8 @@ install.bat
 ```
 $ install.sh
 ```
+
+---
 
 **(Optional) manual Windows:**
 ```
