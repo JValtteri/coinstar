@@ -31,7 +31,10 @@ class Market():
         self.volumes = None
 
         # Generate a list of market days
-        self.market_days = self.create_days()
+        self.market_days, error = self.create_days()
+        self.error = error
+        if error:
+            return None
 
         # Longest bearish is updated during market_days creation
         self.longest_bearish = 0
@@ -180,23 +183,23 @@ class Market():
         try:
             r = requests.get(address, timeout=self.TIMEOUT)
         except requests.exceptions.ReadTimeout:
-            print(f"HTTP timeout {self.TIMEOUT} s exceeded")
-            exit()
+            error = f"HTTP timeout {self.TIMEOUT} s exceeded"
+            return None, error
         except:
-            print(f"HTTP connection error")
-            exit()
+            error = "HTTP connection error"
+            return None, error
         self.request_count += 1
         if self.request_count >= self.throttle_limit:
             print("Throttling connection")
             time.sleep(1.21)
         try:
-            return r.json()
+            return r.json(), None
         except:
             print("HTTP Returned empty")
             return {
                 "total_volumes": [],
                 "prices": []
-            }
+            }, None
 
 
     def create_days(self):
@@ -209,7 +212,14 @@ class Market():
         # Get data
         sample_start = self.time_from
         sample_end = self.time_to + self.SECONDS_IN_HOUR
-        sample_data = self.https_getter(sample_start, sample_end)
+        sample_data, error = self.https_getter(sample_start, sample_end)
+
+        if error:
+            return None, error
+
+        if sample_data['prices'] == []:
+            error = "No data in range"
+            return None, error
 
         prices = sample_data["prices"]
         day_volumes = sample_data["total_volumes"]
@@ -221,7 +231,9 @@ class Market():
             end_of_day = start_of_day + SECONDS_IN_DAY
 
             # Make a human readable timestamp
-            date = self.human_readable_date(start_of_day*1000)
+            date, error = self.human_readable_date(start_of_day*1000)
+            if error:
+                return None, error
 
             day_volume = self.find_midnight(day_volumes, start_of_day)
 
@@ -240,15 +252,20 @@ class Market():
                         )
                     )
 
-        return market_days
+        return market_days, None
 
 
     @staticmethod
     def human_readable_date(timestamp):
         """Make a human readable time from timestamp"""
+        error = False
         timestamp = timestamp / 1000                            # Convert timestamp from ms to s
-        date = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc )       # Make human readable
-        date = str(date).split(" ")[0]                          # Remove the time from the date
-        date = str.replace(date, '-', '.')
-        return date
+        try:
+            date = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc )       # Make human readable
+            date = str(date).split(" ")[0]                          # Remove the time from the date
+            date = str.replace(date, '-', '.')
+        except OSError:
+            error = "Date Error: Pre POSIX date received"
+            date = None
+        return date, error
 

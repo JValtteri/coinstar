@@ -148,7 +148,10 @@ def main(argv):
         sys.exit(2)
 
     # Process market data
-    market = s.get_market()
+    market, error = s.get_market()
+    if error:
+        print(error)
+        sys.exit(2)
 
     ##################
     # PROGRAM OUTPUT #
