@@ -36,6 +36,10 @@ class Market():
         if error:
             return None
 
+        ######################
+        # Market key figures #
+        ######################
+
         # Longest bearish is updated during market_days creation
         self.longest_bearish = 0
         self.longest_bearish = self.find_bearish()
@@ -47,6 +51,25 @@ class Market():
 
         self.best_sell_for_days()
         self.best_buy_and_sell = self.find_best_buy_and_sell()
+
+        self.end_value = self.market_days[-1].close_value
+
+        self.from_start = self.count_change(0)
+        self.year = self.count_change(365)
+        self.month = self.count_change(30)
+        self.week = self.count_change(7)
+
+
+    def count_change(self, days):
+        """Calculate the value change (absolute, procent) for past [days]"""
+        print(f"days {days} ; market days: {len(self.market_days)}")
+        if days > len(self.market_days):
+            return None
+        start_value = self.market_days[-days].open_value
+        end_value = self.end_value
+        change_value = round(end_value - start_value, 2)
+        change_procent = round( (end_value - start_value)/start_value*100, 2)
+        return change_value, change_procent
 
 
     def find_bearish(self):

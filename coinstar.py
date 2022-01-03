@@ -4,6 +4,7 @@
 # coinstar
 
 import json
+# import date
 import datetime
 import sys, getopt
 import status
@@ -110,6 +111,7 @@ def main(argv):
     show_days = False
     show_general = False
     show_today = False
+    end_str = '9999'
 
     s = status.Status()
 
@@ -155,15 +157,13 @@ def main(argv):
     # Handling for various inputs #
     ###############################
 
-    if show_today:
-        # s.start =
-        s.end = datetime.now(tzinfo=datetime.timezone.utc)
-    else:
-        s.start, s.end, error = parse_date(start_str, end_str)
-
+    s.start, s.end, error = parse_date(start_str, end_str)
     if error:
         print(error)
         sys.exit(2)
+
+    if show_today:
+        s.end = round( datetime.datetime.now(datetime.timezone.utc).timestamp() )
 
     # Process market data
     market, error = s.get_market()
@@ -200,8 +200,13 @@ def main(argv):
             print("There was no opportunity to make profit")
 
     if show_today:
-
-        pass
+        print(f"From start:\t{market.from_start[0]} {market.currency}\t{market.from_start[1]}%")
+        if market.year != None:
+            print(f"365 datys:\t{market.year[0]} {market.currency}\t{market.year[1]}%")
+        if market.month != None:
+            print(f"30 days:\t{market.month[0]} {market.currency}\t{market.month[1]}%")
+        if market.week != None:
+            print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
 
     if show_raw:
         print_raw(market.prices, "Prices")
