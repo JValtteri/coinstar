@@ -8,13 +8,13 @@ from market import Market
 class Status():
     '''Stores the state of the program. Mostly for GUI'''
 
-    def __init__(self):
+    def __init__(self, coin="bitcoin", currency="eur"):
 
         self.start = None
         self.end = None
         self.market = None
-        self.coin="bitcoin"
-        self.currency="eur"
+        self.coin=coin
+        self.currency=currency
 
         self.error = False
 

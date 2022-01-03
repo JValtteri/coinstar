@@ -112,8 +112,8 @@ def main(argv):
     show_general = False
     show_today = False
     end_str = '9999'
-
-    s = status.Status()
+    coin='bitcoin'
+    currency='eur'
 
     if argv == []:
         # Start GUI
@@ -123,7 +123,7 @@ def main(argv):
 
     # Parse arguments
     try:
-        opts, args = getopt.getopt(argv,"hrdgfmts:e:",["start=","end=","help","days","format","gui","more","today"])
+        opts, args = getopt.getopt(argv,"hrdgfmts:e:c:u:",["start=","end=","coin=","currency=","help","days","format","gui","more","today"])
     except getopt.GetoptError:
         print(short_help)
         sys.exit(2)
@@ -135,6 +135,10 @@ def main(argv):
             start_str = arg
         elif opt in ("-e", "--end"):
             end_str = arg
+        elif opt in ("-c", "--coin"):
+            coin = arg
+        elif opt in ("-u", "--currency"):
+            currency = arg
         elif opt in ("-f", "--format"):
             show_points = True
         elif opt in ("-d", "--days"):
@@ -148,6 +152,8 @@ def main(argv):
         elif opt in ("-g", "--gui"):
             gui.Gui()
             sys.exit()
+
+    s = status.Status(coin, currency)
 
     if opts == []:
         print(short_help)
@@ -179,6 +185,7 @@ def main(argv):
     end_date, _ = human_readable_date(s.end * 1000)
 
     print(f"\nStart date: {start_date}, End date: {end_date}\n")
+    print(f"Currency:\t{coin.capitalize()} - {currency.capitalize()}\n")
 
     if show_days == True:
         market.print_days()
@@ -207,6 +214,8 @@ def main(argv):
             print(f"30 days:\t{market.month[0]} {market.currency}\t{market.month[1]}%")
         if market.week != None:
             print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
+        if market.day != None:
+            print(f"1 day:\t\t{market.day[0]} {market.currency}\t{market.day[1]}%")
         print(f"\nToday:\t\t{market.end_value} {market.currency}")
 
     if show_raw:

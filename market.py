@@ -55,16 +55,17 @@ class Market():
         self.end_value = round(self.market_days[-1].close_value, 2)
 
         self.from_start = self.count_change(0)
-        self.year = self.count_change(365)
-        self.month = self.count_change(30)
-        self.week = self.count_change(7)
-
+        self.year = self.count_change(365+1)
+        self.month = self.count_change(30+1)
+        self.week = self.count_change(7+1)
+        self.day =  self.count_change(1+1)
 
     def count_change(self, days):
         """Calculate the value change (absolute, procent) for past [days]"""
         if days > len(self.market_days):
             return None
         start_value = self.market_days[-days].open_value
+        print(self.market_days[-days].date)     #debug
         end_value = self.end_value
         change_value = round(end_value - start_value, 2)
         change_procent = round( (end_value - start_value)/start_value*100, 2)
