@@ -231,7 +231,7 @@ class Market():
             end_of_day = start_of_day + SECONDS_IN_DAY
 
             # Make a human readable timestamp
-            date, error = self.human_readable_date(start_of_day*1000)
+            date, error = human_readable_date(start_of_day*1000)
             if error:
                 return None, error
 
@@ -255,17 +255,16 @@ class Market():
         return market_days, None
 
 
-    @staticmethod
-    def human_readable_date(timestamp):
-        """Make a human readable time from timestamp"""
-        error = False
-        timestamp = timestamp / 1000                            # Convert timestamp from ms to s
-        try:
-            date = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc )       # Make human readable
-            date = str(date).split(" ")[0]                          # Remove the time from the date
-            date = str.replace(date, '-', '.')
-        except OSError:
-            error = "Date Error: Pre POSIX date received"
-            date = None
-        return date, error
+def human_readable_date(timestamp):
+    """Make a human readable time from timestamp"""
+    error = False
+    timestamp = timestamp / 1000                            # Convert timestamp from ms to s
+    try:
+        date = datetime.datetime.fromtimestamp(timestamp, tz=datetime.timezone.utc )       # Make human readable
+        date = str(date).split(" ")[0]                          # Remove the time from the date
+        date = str.replace(date, '-', '.')
+    except OSError:
+        error = "Date Error: Pre POSIX date received"
+        date = None
+    return date, error
 

@@ -8,6 +8,7 @@ import datetime
 import sys, getopt
 import status
 import gui
+from market import human_readable_date
 
 
 def time_to_posix(year, mon, day, hour=0, min=0, sec=0):
@@ -64,24 +65,31 @@ def parse_date(start_str, end_str):
     except UnboundLocalError:
         print("Error: Both start and end date must be defined. Use -h for Help")
         return None, None, error
-    if len(start) != 3 or len(end) != 3:
-        error = "Date format error: Incomplete date\n" \
-                "Date format: YYYY.MM.DD"
-        return start, end, error
+    # if len(start) != 3 or len(end) != 3:
+    #     error = "Date format error: Incomplete date\n" \
+    #             "Date format: YYYY.MM.DD"
+    #     return start, end, error
+
+    parsed_start = [2000,1,1]
+    for i in range(len(start)):
+        parsed_start[i] = start[i]
+    parsed_end = [2000,1,1]
+    for i in range(len(end)):
+        parsed_end[i] = end[i]
 
     # Convert dates to POSIX
     try:
-        start = time_to_posix(start[0], start[1], start[2])
-        end = time_to_posix(end[0], end[1], end[2])
+        start_stamp = time_to_posix(parsed_start[0], parsed_start[1], parsed_start[2])
+        end_stamp = time_to_posix(parsed_end[0], parsed_end[1], parsed_end[2])
     except:
         error = "Date error: Invalid date\n"
         return start, end, error
 
     if end < start:
         error = "Error: End date is earlier than start date"
-        return start, end, error
+        return parsed_start, end, error
 
-    return start, end, error
+    return start_stamp, end_stamp, error
 
 
 def main(argv):
@@ -100,6 +108,8 @@ def main(argv):
     show_raw = False
     show_points = False
     show_days = False
+    show_general = False
+    show_today = False
 
     s = status.Status()
 
@@ -111,7 +121,7 @@ def main(argv):
 
     # Parse arguments
     try:
-        opts, args = getopt.getopt(argv,"hrdgfs:e:",["start=","end=","help","days","format","gui"])
+        opts, args = getopt.getopt(argv,"hrdgfmts:e:",["start=","end=","help","days","format","gui","more","today"])
     except getopt.GetoptError:
         print(short_help)
         sys.exit(2)
@@ -129,6 +139,10 @@ def main(argv):
             show_days = True
         elif opt in ("-r", "--raw"):
             show_raw = True
+        elif opt in ("-m", "--more"):
+            show_general = True
+        elif opt in ("-t", "--today"):
+            show_today = True
         elif opt in ("-g", "--gui"):
             gui.Gui()
             sys.exit()
@@ -141,7 +155,11 @@ def main(argv):
     # Handling for various inputs #
     ###############################
 
-    s.start, s.end, error = parse_date(start_str, end_str)
+    if show_today:
+        # s.start =
+        s.end = datetime.now(tzinfo=datetime.timezone.utc)
+    else:
+        s.start, s.end, error = parse_date(start_str, end_str)
 
     if error:
         print(error)
@@ -157,24 +175,33 @@ def main(argv):
     # PROGRAM OUTPUT #
     ##################
 
-    print(f"\nStart date: {start_str}, End date: {end_str}\n")
+    start_date, _ = human_readable_date(s.start * 1000)
+    end_date, _ = human_readable_date(s.end * 1000)
+
+    print(f"\nStart date: {start_date}, End date: {end_date}\n")
 
     if show_days == True:
         market.print_days()
-    print(f"Max bearish length:\t{market.longest_bearish} days")
-    print(f"Max volume was on:\t{market.max_volume_date}")
-    print(f"Max volume was:\t\t{round(market.max_volume)} {market.currency}")
 
-    if market.best_buy_and_sell['profit'] > 0:
-        buy_day = market.best_buy_and_sell['buy']
-        sell_day = market.best_buy_and_sell['sell']
-        profit = round(market.best_buy_and_sell['profit'], 2)
+    if show_general:
+        print(f"Max bearish length:\t{market.longest_bearish} days")
+        print(f"Max volume was on:\t{market.max_volume_date}")
+        print(f"Max volume was:\t\t{round(market.max_volume)} {market.currency}")
 
-        print(f"Best day to buy was:\t{buy_day}")
-        print(f"Best day to sell was:\t{sell_day}")
-        print(f"Profit was:\t\t{profit} {market.currency}")
-    else:
-        print("There was no opportunity to make profit")
+        if market.best_buy_and_sell['profit'] > 0:
+            buy_day = market.best_buy_and_sell['buy']
+            sell_day = market.best_buy_and_sell['sell']
+            profit = round(market.best_buy_and_sell['profit'], 2)
+
+            print(f"Best day to buy was:\t{buy_day}")
+            print(f"Best day to sell was:\t{sell_day}")
+            print(f"Profit was:\t\t{profit} {market.currency}")
+        else:
+            print("There was no opportunity to make profit")
+
+    if show_today:
+
+        pass
 
     if show_raw:
         print_raw(market.prices, "Prices")
