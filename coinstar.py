@@ -111,12 +111,15 @@ def main(argv):
                '-g    --gui                 Start GUI\n' \
                '-h    --help                Show this help\n'
 
+    SECONDS_IN_DAY = 86400
+
     show_raw = False
     show_points = False
     show_days = False
     show_general = False
     show_today = False
     end_str = None
+    start_str = None
     coin='bitcoin'
     currency='eur'
 
@@ -168,15 +171,25 @@ def main(argv):
     # Handling for various inputs #
     ###############################
 
+
     if end_str == None:
         s.end = round( datetime.datetime.now(datetime.timezone.utc).timestamp() )
-        s.start, error = parse_date(start_str)
+        print(s.end)
     else:
-        s.start, s.end, error = parse_dates(start_str, end_str)
+        s.end, error = parse_date(end_str)
+        if error:
+            print(error)
+            sys.exit(2)
 
-    if error:
-        print(error)
-        sys.exit(2)
+    if start_str == None:
+        s.start = s.end - (365 * SECONDS_IN_DAY)
+        print(s.start)
+    else:
+        s.start, error = parse_date(start_str)
+        if error:
+            print(error)
+            sys.exit(2)
+
 
     # Process market data
     market, error = s.get_market()
@@ -223,7 +236,7 @@ def main(argv):
             print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
         if market.day != None:
             print(f"1 day:\t\t{market.day[0]} {market.currency}\t{market.day[1]}%")
-        print(f"\nToday:\t\t{market.end_value} {market.currency}")
+        print(f"\nToday*:\t\t{market.end_value} {market.currency}")
 
     if show_raw:
         print_raw(market.prices, "Prices")
