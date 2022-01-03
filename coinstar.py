@@ -4,7 +4,6 @@
 # coinstar
 
 import json
-# import date
 import datetime
 import sys, getopt
 import status
@@ -94,7 +93,7 @@ def parse_date(date_str):
 def main(argv):
     """Main function"""
 
-    short_help = 'coinstar.py -s <start date> -e <end date> -r -d --help'
+    short_help = 'coinstar.py -s <start date> -e <end date> -c <coin> -u <currency> -t -m -f -r -d -g --help'
     helptext = 'coinstar.py <opts>\n\n' \
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
@@ -174,7 +173,6 @@ def main(argv):
 
     if end_str == None:
         s.end = round( datetime.datetime.now(datetime.timezone.utc).timestamp() )
-        print(s.end)
     else:
         s.end, error = parse_date(end_str)
         if error:
@@ -183,7 +181,6 @@ def main(argv):
 
     if start_str == None:
         s.start = s.end - (365 * SECONDS_IN_DAY)
-        print(s.start)
     else:
         s.start, error = parse_date(start_str)
         if error:
