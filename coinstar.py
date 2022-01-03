@@ -50,8 +50,8 @@ def parse_dates(start_str, end_str):
     """Make date_strs to posix dates"""
     error = False
 
-    start = parse_date(start_str)
-    end = parse_date(end_str)
+    start, _ = parse_date(start_str)
+    end, _ = parse_date(end_str)
 
     if end < start:
         error = "Error: End date is earlier than start date"
@@ -98,12 +98,19 @@ def main(argv):
     helptext = 'coinstar.py <opts>\n\n' \
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
+               '-c    --coin   <coin>       Select coin\n' \
+               '                            (default: bitcoin) '\
+               '-u    --currency <currency> Select currency\n' \
+               '                            (default: eur) '\
+               '-t    --today               Show to course change compared to today\n' \
+               '-m    --more                Show more data\n' \
                '-r    --raw                 Show raw data\n' \
                '-f    --format              Show formatted datapoints\n' \
                '-d    --days                Show day values:\n' \
                '                            Open, Close, Volume, Bearish\n' \
                '-g    --gui                 Start GUI\n' \
                '-h    --help                Show this help\n'
+
     show_raw = False
     show_points = False
     show_days = False
@@ -166,6 +173,7 @@ def main(argv):
         s.start, error = parse_date(start_str)
     else:
         s.start, s.end, error = parse_dates(start_str, end_str)
+
     if error:
         print(error)
         sys.exit(2)
