@@ -207,6 +207,7 @@ def main(argv):
             print(f"30 days:\t{market.month[0]} {market.currency}\t{market.month[1]}%")
         if market.week != None:
             print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
+        print(f"\nToday:\t\t{market.end_value} {market.currency}")
 
     if show_raw:
         print_raw(market.prices, "Prices")

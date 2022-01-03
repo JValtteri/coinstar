@@ -52,7 +52,7 @@ class Market():
         self.best_sell_for_days()
         self.best_buy_and_sell = self.find_best_buy_and_sell()
 
-        self.end_value = self.market_days[-1].close_value
+        self.end_value = round(self.market_days[-1].close_value, 2)
 
         self.from_start = self.count_change(0)
         self.year = self.count_change(365)
@@ -62,7 +62,6 @@ class Market():
 
     def count_change(self, days):
         """Calculate the value change (absolute, procent) for past [days]"""
-        print(f"days {days} ; market days: {len(self.market_days)}")
         if days > len(self.market_days):
             return None
         start_value = self.market_days[-days].open_value
