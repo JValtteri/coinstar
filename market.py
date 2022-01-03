@@ -65,7 +65,7 @@ class Market():
         if days > len(self.market_days):
             return None
         start_value = self.market_days[-days].open_value
-        print(self.market_days[-days].date)     #debug
+        # print(self.market_days[-days].date)     #debug
         end_value = self.end_value
         change_value = round(end_value - start_value, 2)
         change_procent = round( (end_value - start_value)/start_value*100, 2)

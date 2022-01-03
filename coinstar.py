@@ -46,19 +46,30 @@ def print_datapoints(prices, volumes):
 
         print(f"{human_time} \t {price} \t {volume}")
 
-def parse_date(start_str, end_str):
+def parse_dates(start_str, end_str):
     """Make date_strs to posix dates"""
     error = False
 
+    start = parse_date(start_str)
+    end = parse_date(end_str)
+
+    if end < start:
+        error = "Error: End date is earlier than start date"
+        return start, end, error
+
+    return start, end, error
+
+
+def parse_date(date_str):
+    """Make date_strs to posix dates"""
+    error = False
+    parsed_date = [2000,1,1]
+
     # Convert date seperators
-    start_str = start_str.replace('/', '.')
-    end_str = end_str.replace('/', '.')
-    start_str = start_str.replace('-', '.')
-    end_str = end_str.replace('-', '.')
+    date_str = date_str.replace('/', '.')
 
     try:
-        start = [int(i) for i in start_str.split('.')]
-        end = [int(i) for i in end_str.split('.')]
+        date_str = [int(i) for i in date_str.split('.')]
     except ValueError:
         error = "Date format error: numbers only\n" \
                 "Date format: YYYY.MM.DD"
@@ -66,31 +77,18 @@ def parse_date(start_str, end_str):
     except UnboundLocalError:
         print("Error: Both start and end date must be defined. Use -h for Help")
         return None, None, error
-    # if len(start) != 3 or len(end) != 3:
-    #     error = "Date format error: Incomplete date\n" \
-    #             "Date format: YYYY.MM.DD"
-    #     return start, end, error
 
-    parsed_start = [2000,1,1]
-    for i in range(len(start)):
-        parsed_start[i] = start[i]
-    parsed_end = [2000,1,1]
-    for i in range(len(end)):
-        parsed_end[i] = end[i]
+    for i in range(len(date_str)):
+        parsed_date[i] = date_str[i]
 
     # Convert dates to POSIX
     try:
-        start_stamp = time_to_posix(parsed_start[0], parsed_start[1], parsed_start[2])
-        end_stamp = time_to_posix(parsed_end[0], parsed_end[1], parsed_end[2])
+        timestamp = time_to_posix(parsed_date[0], parsed_date[1], parsed_date[2])
     except:
         error = "Date error: Invalid date\n"
-        return start, end, error
+        return parse_date, error
 
-    if end < start:
-        error = "Error: End date is earlier than start date"
-        return parsed_start, end, error
-
-    return start_stamp, end_stamp, error
+    return timestamp, error
 
 
 def main(argv):
@@ -111,7 +109,7 @@ def main(argv):
     show_days = False
     show_general = False
     show_today = False
-    end_str = '9999'
+    end_str = None
     coin='bitcoin'
     currency='eur'
 
@@ -163,13 +161,14 @@ def main(argv):
     # Handling for various inputs #
     ###############################
 
-    s.start, s.end, error = parse_date(start_str, end_str)
+    if end_str == None:
+        s.end = round( datetime.datetime.now(datetime.timezone.utc).timestamp() )
+        s.start, error = parse_date(start_str)
+    else:
+        s.start, s.end, error = parse_dates(start_str, end_str)
     if error:
         print(error)
         sys.exit(2)
-
-    if show_today:
-        s.end = round( datetime.datetime.now(datetime.timezone.utc).timestamp() )
 
     # Process market data
     market, error = s.get_market()
