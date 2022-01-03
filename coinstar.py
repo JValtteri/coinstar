@@ -207,6 +207,18 @@ def main(argv):
     if show_days == True:
         market.print_days()
 
+    if show_today:
+        print(f"From start:\t{market.from_start[0]} {market.currency}\t{market.from_start[1]}%")
+        if market.year != None:
+            print(f"365 datys:\t{market.year[0]} {market.currency}\t{market.year[1]}%")
+        if market.month != None:
+            print(f"30 days:\t{market.month[0]} {market.currency}\t{market.month[1]}%")
+        if market.week != None:
+            print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
+        if market.day != None:
+            print(f"1 day:\t\t{market.day[0]} {market.currency}\t{market.day[1]}%")
+        print(f"\nToday*:\t\t{market.end_value} {market.currency}\n")
+
     if show_general:
         print(f"Max bearish length:\t{market.longest_bearish} days")
         print(f"Max volume was on:\t{market.max_volume_date}")
@@ -222,18 +234,6 @@ def main(argv):
             print(f"Profit was:\t\t{profit} {market.currency}")
         else:
             print("There was no opportunity to make profit")
-
-    if show_today:
-        print(f"From start:\t{market.from_start[0]} {market.currency}\t{market.from_start[1]}%")
-        if market.year != None:
-            print(f"365 datys:\t{market.year[0]} {market.currency}\t{market.year[1]}%")
-        if market.month != None:
-            print(f"30 days:\t{market.month[0]} {market.currency}\t{market.month[1]}%")
-        if market.week != None:
-            print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
-        if market.day != None:
-            print(f"1 day:\t\t{market.day[0]} {market.currency}\t{market.day[1]}%")
-        print(f"\nToday*:\t\t{market.end_value} {market.currency}")
 
     if show_raw:
         print_raw(market.prices, "Prices")
