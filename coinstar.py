@@ -98,9 +98,9 @@ def main(argv):
                '-s    --start  <start date> YYYY.MM.DD\n' \
                '-e    --end    <end date>   YYYY.MM.DD\n' \
                '-c    --coin   <coin>       Select coin\n' \
-               '                            (default: bitcoin) '\
+               '                            (default: bitcoin)\n'\
                '-u    --currency <currency> Select currency\n' \
-               '                            (default: eur) '\
+               '                            (default: eur)\n'\
                '-t    --today               Show to course change compared to today\n' \
                '-m    --more                Show more data\n' \
                '-r    --raw                 Show raw data\n' \
