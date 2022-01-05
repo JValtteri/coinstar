@@ -167,7 +167,10 @@ class Gui():
         max_volume = round(max_volume)
         buy = market.best_buy_and_sell["buy"]
         sell = market.best_buy_and_sell["sell"]
-        profit = round( market.best_buy_and_sell["profit"], 2 )
+        if market.best_buy_and_sell["profit"] > 0:
+            profit = round( market.best_buy_and_sell["profit"], 2 )
+        else:
+            profit = "No opportunity for profit"
 
         self.e_bear.insert("0", bearish)
         self.e_vol_day.insert("0", volume_day)
