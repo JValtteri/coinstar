@@ -212,6 +212,9 @@ class Market():
         # Get data
         sample_start = self.time_from
         sample_end = self.time_to + self.SECONDS_IN_HOUR
+        # if sample is too short to get UTC:00 values, adjust time length
+        if sample_end - sample_start < self.SECONDS_IN_DAY * 90:
+            sample_end = sample_start + self.SECONDS_IN_DAY * 91
         sample_data, error = self.https_getter(sample_start, sample_end)
 
         if error:
