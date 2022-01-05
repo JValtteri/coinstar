@@ -54,11 +54,30 @@ class Market():
 
         self.end_value = round(self.market_days[-1].close_value, 2)
 
+        self.current_trend = self.find_trend()
+
         self.from_start = self.count_change(0)
         self.year = self.count_change(365+1)
         self.month = self.count_change(30+1)
         self.week = self.count_change(7+1)
+        self.twoday =  self.count_change(2+1)
         self.day =  self.count_change(1+1)
+
+
+    def find_trend(self):
+        """Count current trend (days up or down)"""
+        trend = 0
+        down = self.market_days[-2].is_bearish
+
+        for i in range(len(self.market_days)-2, 0, -1):
+            if self.market_days[i].is_bearish == down:
+                trend += 1
+            else:
+                break
+        if down:
+            trend = trend * -1
+        return trend
+
 
     def count_change(self, days):
         """Calculate the value change (absolute, procent) for past [days]"""
