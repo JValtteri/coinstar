@@ -216,14 +216,14 @@ def main(argv):
         if market.week != None:
             print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
         if market.twoday != None:
-            print(f"2 day:\t\t{market.twoday[0]} {market.currency}\t{market.twoday[1]}%")
+            print(f"2 days:\t\t{market.twoday[0]} {market.currency}\t{market.twoday[1]}%")
         # if market.day != None:
         #     print(f"1 day:\t\t{market.day[0]} {market.currency}\t{market.day[1]}%")
         if market.current_trend < 0:
             print(f"\nDOWN trend:\t{abs(market.current_trend)}\n")
         if market.current_trend > 0:
-            print(f"\nUP trend:\t{market.current_trend}\n")
-        print(f"\nClose value:\t{market.end_value} {market.currency}\n")
+            print(f"\nUP trend:\t{market.current_trend}")
+        print(f"Close value:\t{market.end_value} {market.currency}\n")
 
     if show_general:
         print(f"Max bearish length:\t{market.longest_bearish} days")
