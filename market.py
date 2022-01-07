@@ -182,7 +182,7 @@ class Market():
         for i in range(len(datapoints)):
             # Look for the point closest to midnight
             # i.e. smalles delta time
-            if datapoints[i][TIMESTAMP] > midnight_time:
+            if datapoints[i][TIMESTAMP] >= midnight_time:
                 delta_point_a = abs( datapoints[i][TIMESTAMP] - midnight_time )
                 delta_point_b = abs( datapoints[i-1][TIMESTAMP] - midnight_time )
 
@@ -194,7 +194,7 @@ class Market():
                     midnight_value = datapoints[i-1][VALUE]
                     break
             else:
-                midnight_value = datapoints[i][VALUE]
+                midnight_value = 0
 
         if len(datapoints) == 0:
             # print(f"Midnight value not found")
@@ -286,6 +286,8 @@ class Market():
                 # Select the datapoint closest to 00:00:00 at start and end of the day
                 day_open_value = self.find_midnight(prices, start_of_day)
                 day_close_value = self.find_midnight(prices, end_of_day)
+                if day_close_value == 0:
+                    day_close_value = day_open_value
 
                 # Generates the Market_day object and adds it to the list
                 market_days.append(

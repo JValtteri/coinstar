@@ -174,7 +174,10 @@ def main(argv):
     if end_str == None:
         s.end = round( datetime.datetime.now(datetime.timezone.utc).timestamp() )
     else:
-        s.end, error = parse_date(end_str)
+        try:
+            s.end, error = parse_date(end_str)
+        except ValueError:
+            error = "Parameter Error: Empty date"
         if error:
             print(error)
             sys.exit(2)
@@ -182,10 +185,14 @@ def main(argv):
     if start_str == None:
         s.start = s.end - (365 * SECONDS_IN_DAY)
     else:
-        s.start, error = parse_date(start_str)
+        try:
+            s.start, error = parse_date(start_str)
+        except ValueError:
+            error = "Parameter Error: Empty date"
         if error:
             print(error)
             sys.exit(2)
+
 
 
     # Process market data
