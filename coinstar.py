@@ -236,6 +236,9 @@ def main(argv):
         print(f"Max bearish length:\t{market.longest_bearish} days")
         print(f"Max volume was on:\t{market.max_volume_date}")
         print(f"Max volume was:\t\t{round(market.max_volume)} {market.currency}")
+        print(f"Max value was on:\t{market.max_value[1]}")
+        print(f"Max value was:\t\t{round(market.max_value[0])} {market.currency}")
+
 
         if market.best_buy_and_sell['profit'] > 0:
             buy_day = market.best_buy_and_sell['buy']

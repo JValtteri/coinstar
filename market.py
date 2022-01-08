@@ -48,6 +48,7 @@ class Market():
         max_volume, max_volume_date = self.find_max_volume()
         self.max_volume = max_volume
         self.max_volume_date = max_volume_date
+        self.max_value = self.find_max_value()
 
         self.best_sell_for_days()
         self.best_buy_and_sell = self.find_best_buy_and_sell()
@@ -115,6 +116,18 @@ class Market():
                 max_volume_day = day.date
 
         return max_volume, max_volume_day
+
+
+    def find_max_value(self):
+        """Finds the biggest volume day and returns: volume, date"""
+        max_value = 0
+        max_value_day = ''
+        for day in self.market_days:
+            if day.close_value > max_value:
+                max_value = day.close_value
+                max_value_day = day.date
+
+        return max_value, max_value_day
 
 
     def best_sell_for_days(self):
