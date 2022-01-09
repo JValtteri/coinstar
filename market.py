@@ -6,7 +6,9 @@
 import time
 import datetime
 import requests
+import copy
 from marketday import Market_day
+
 
 class Market():
 
@@ -89,7 +91,7 @@ class Market():
         end_value = self.end_value
         change_value = round(end_value - start_value, 2)
         change_procent = round( (end_value - start_value)/start_value*100, 2)
-        return change_value, change_procent
+        return change_value, change_procent, round(start_value,2)
 
 
     def find_bearish(self):

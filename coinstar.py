@@ -183,7 +183,7 @@ def main(argv):
             sys.exit(2)
 
     if start_str == None:
-        s.start = s.end - (365 * SECONDS_IN_DAY)
+        s.start = s.end - (366 * SECONDS_IN_DAY)
     else:
         try:
             s.start, error = parse_date(start_str)
@@ -215,17 +215,17 @@ def main(argv):
         market.print_days()
 
     if show_today:
-        print(f"From start:\t{market.from_start[0]} {market.currency}\t{market.from_start[1]}%")
+        print(f"From start:\t{market.from_start[2]}\t{market.from_start[0]} {market.currency}\t{market.from_start[1]}%")
         if market.year != None:
-            print(f"365 datys:\t{market.year[0]} {market.currency}\t{market.year[1]}%")
+            print(f"365 datys:\t{market.year[2]}\t{market.year[0]} {market.currency}\t{market.year[1]}%")
         if market.month != None:
-            print(f"30 days:\t{market.month[0]} {market.currency}\t{market.month[1]}%")
+            print(f"30 days:\t{market.month[2]}\t{market.month[0]} {market.currency}\t{market.month[1]}%")
         if market.week != None:
-            print(f"7 days:\t\t{market.week[0]} {market.currency}\t{market.week[1]}%")
+            print(f"7 days:\t\t{market.week[2]}\t{market.week[0]} {market.currency}\t{market.week[1]}%")
         if market.twoday != None:
-            print(f"2 days:\t\t{market.twoday[0]} {market.currency}\t{market.twoday[1]}%")
+            print(f"2 days:\t\t{market.twoday[2]}\t{market.twoday[0]} {market.currency}\t{market.twoday[1]}%")
         # if market.day != None:
-        #     print(f"1 day:\t\t{market.day[0]} {market.currency}\t{market.day[1]}%")
+        #     print(f"1 day:\t\t{market.day[2]}\t{market.day[0]} {market.currency}\t{market.day[1]}%")
         if market.current_trend < 0:
             print(f"\nDOWN trend:\t{abs(market.current_trend)}\n")
         if market.current_trend > 0:
